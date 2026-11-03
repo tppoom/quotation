@@ -194,7 +194,7 @@
           ประวัติ
           <span
             x-show="historyList.length > 0"
-            class="ml-1.5 bg-slate-700 text-slate-200 text-[10px] font-semibold px-1.5 py-0.2 rounded-full"
+            class="ml-1.5 bg-slate-700 text-slate-200 text-[10px] font-semibold px-1.5 py-0.5 rounded-full"
             x-text="historyList.length"
           ></span>
         </button>
@@ -372,6 +372,12 @@
             <div class="flex items-center space-x-2">
               <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
               <h2 class="text-sm font-semibold text-slate-800 font-heading">รายการสินค้าและบริการ (Items)</h2>
+              <span
+                class="text-[11px] font-medium px-2 py-0.5 rounded-full border transition"
+                :class="quotation.items.length > 17 ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-slate-100 text-slate-500 border-slate-200'"
+              >
+                <span x-text="quotation.items.length"></span> / 17 แถว A4
+              </span>
             </div>
             
             <!-- Quick Add Action Buttons -->
@@ -718,7 +724,7 @@
                   </template>
 
                   <!-- Fill remaining empty rows up to 17 rows to match original Excel layout -->
-                  <template x-for="i in Math.max(0, 16 - quotation.items.length)" :key="'empty_' + i">
+                  <template x-for="i in Math.max(0, 17 - quotation.items.length)" :key="'empty_' + i">
                     <tr class="h-6">
                       <td class="border-l border-r border-slate-700"></td>
                       <td class="border-l border-r border-slate-700"></td>

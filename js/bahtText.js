@@ -33,7 +33,8 @@
 
   function bahtText(input) {
     if (input === null || input === undefined || input === '') return '(ศูนย์บาทถ้วน)';
-    const num = parseFloat(input);
+    const cleanInput = typeof input === 'string' ? input.replace(/,/g, '').trim() : input;
+    const num = parseFloat(cleanInput);
     if (isNaN(num)) return '(ศูนย์บาทถ้วน)';
     if (num === 0) return '(ศูนย์บาทถ้วน)';
 

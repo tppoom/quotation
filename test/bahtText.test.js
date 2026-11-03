@@ -22,6 +22,7 @@ function runTests() {
   assert.strictEqual(bahtText(0.21), '(ยี่สิบเอ็ดสตางค์)');
   assert.strictEqual(bahtText(-50), '(ลบห้าสิบบาทถ้วน)');
   assert.strictEqual(bahtText('57552.90'), '(ห้าหมื่นเจ็ดพันห้าร้อยห้าสิบสองบาทเก้าสิบสตางค์)');
+  assert.strictEqual(bahtText('57,552.90'), '(ห้าหมื่นเจ็ดพันห้าร้อยห้าสิบสองบาทเก้าสิบสตางค์)');
   assert.strictEqual(bahtText(null), '(ศูนย์บาทถ้วน)');
   assert.strictEqual(bahtText(undefined), '(ศูนย์บาทถ้วน)');
   assert.strictEqual(bahtText(''), '(ศูนย์บาทถ้วน)');
