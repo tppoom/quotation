@@ -100,6 +100,9 @@
       activeMobileTab: 'form', // 'form' | 'preview'
       previewZoom: 'fit', // 'fit' | '100' | '75'
       computedScale: 1,
+      showSellerFields: false,
+      isAutoSaved: true,
+      pastCustomers: [],
       historySearch: '',
       saveNotice: '',
       sellerProfileForm: { ...seller },
@@ -111,11 +114,16 @@
         const draft = smMgr.loadCurrentDraft ? smMgr.loadCurrentDraft() : null;
         if (draft && draft.docNo) {
           this.quotation = draft;
+          const savedSeller = smMgr.getSellerProfile ? smMgr.getSellerProfile() : {};
+          if (!this.quotation.seller || !this.quotation.seller.name) {
+            this.quotation.seller = { ...savedSeller };
+          }
         } else {
           this.startNewQuotation();
         }
         this.calculateTotals();
         this.refreshHistory();
+        this.loadPastCustomers();
 
         // Autosave draft on changes
         if (typeof this.$watch === 'function') {
@@ -124,6 +132,7 @@
             if (smMgr.saveCurrentDraft) {
               smMgr.saveCurrentDraft(this.quotation);
             }
+            this.isAutoSaved = true;
           });
         }
 
@@ -137,6 +146,39 @@
           setTimeout(() => {
             this.computeScale();
           }, 100);
+        }
+      },
+
+      autoSaveSeller() {
+        const smMgr = getStorageManager();
+        if (smMgr && smMgr.saveSellerProfile && this.quotation.seller) {
+          smMgr.saveSellerProfile(this.quotation.seller);
+        }
+        this.sellerProfileForm = { ...(this.quotation.seller || {}) };
+        this.isAutoSaved = true;
+      },
+
+      loadPastCustomers() {
+        const smMgr = getStorageManager();
+        const history = (smMgr.getHistory ? smMgr.getHistory() : []) || [];
+        const map = new Map();
+        history.forEach(item => {
+          if (item && item.customer && item.customer.name && item.customer.name.trim()) {
+            const name = item.customer.name.trim();
+            if (!map.has(name)) {
+              map.set(name, item.customer.address || '');
+            }
+          }
+        });
+        this.pastCustomers = Array.from(map.entries()).map(([name, address]) => ({ name, address }));
+      },
+
+      onCustomerSelect(name) {
+        if (!name || typeof name !== 'string') return;
+        const match = this.pastCustomers.find(c => c.name.toLowerCase() === name.trim().toLowerCase());
+        if (match && match.address && (!this.quotation.customer.address || !this.quotation.customer.address.trim())) {
+          this.quotation.customer.address = match.address;
+          this.flashNotice(`ดึงที่อยู่ลูกค้า ${match.name} อัตโนมัติ`);
         }
       },
 
@@ -339,8 +381,12 @@
         if (smMgr.saveToHistory) {
           smMgr.saveToHistory(this.quotation);
         }
+        if (smMgr.saveSellerProfile && this.quotation.seller) {
+          smMgr.saveSellerProfile(this.quotation.seller);
+        }
         this.refreshHistory();
-        this.flashNotice(`บันทึกเอกสาร ${this.quotation.docNo} เรียบร้อยแล้ว`);
+        this.loadPastCustomers();
+        this.flashNotice(`บันทึกเอกสาร ${this.quotation.docNo} ลงประวัติเรียบร้อยแล้ว`);
       },
 
       loadFromHistory(item) {
