@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th" class="h-full bg-slate-100">
+<html lang="th" class="h-full bg-slate-100 overflow-x-hidden">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
@@ -30,6 +30,11 @@
   <!-- Custom & Print Stylesheet -->
   <style>
     [x-cloak] { display: none !important; }
+
+    html, body {
+      overflow-x: hidden;
+      max-width: 100vw;
+    }
 
     body {
       font-family: 'Sarabun', sans-serif;
@@ -119,7 +124,7 @@
 </head>
 
 <body
-  class="h-full flex flex-col text-slate-800"
+  class="h-full flex flex-col text-slate-800 overflow-x-hidden w-full max-w-full"
   x-data="quotationApp()"
   x-init="init()"
 >
@@ -128,24 +133,24 @@
   <!-- TOP NAVIGATION HEADER                                                 -->
   <!-- ===================================================================== -->
   <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 no-print shadow-sm">
-    <div class="max-w-[1700px] mx-auto px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2">
+    <div class="max-w-[1700px] mx-auto px-2.5 sm:px-6 py-2 sm:py-3 flex items-center justify-between gap-1.5 sm:gap-2">
       
       <!-- Logo & App Brand -->
-      <div class="flex items-center space-x-2 shrink-0">
+      <div class="flex items-center space-x-1.5 sm:space-x-2 min-w-0">
         <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-900/30 shrink-0">
           <svg class="w-4 h-4 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
           </svg>
         </div>
-        <div>
-          <div class="flex items-center space-x-1.5 sm:space-x-2">
-            <h1 class="text-xs sm:text-base font-semibold tracking-tight text-white font-heading">
+        <div class="min-w-0">
+          <div class="flex items-center space-x-1 sm:space-x-2">
+            <h1 class="text-xs sm:text-base font-semibold tracking-tight text-white font-heading truncate">
               <span class="sm:hidden">ใบเสนอราคา</span>
               <span class="hidden sm:inline">Quotation Generator</span>
             </h1>
-            <span class="text-[9px] sm:text-[11px] font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-1 py-0.5 rounded">A4</span>
+            <span class="text-[9px] sm:text-[11px] font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-1 py-0.5 rounded shrink-0">A4</span>
           </div>
-          <p class="hidden sm:block text-xs text-slate-400">ระบบสร้างใบเสนอราคาตามมาตรฐาน Excel</p>
+          <p class="hidden sm:block text-xs text-slate-400 truncate">ระบบสร้างใบเสนอราคาตามมาตรฐาน Excel</p>
         </div>
       </div>
 
@@ -279,11 +284,11 @@
 
       <!-- Mobile Toolbar (< lg) -->
       <div class="flex items-center space-x-1.5 lg:hidden shrink-0">
-        <!-- ⚡ Demo button on Mobile -->
+        <!-- ⚡ Demo button on Mobile (shown on sm screens; on small phones, available in Menu & Form Header) -->
         <button
           type="button"
           @click="loadDemoTemplate()"
-          class="inline-flex items-center px-2 py-1 text-[11px] font-medium rounded-lg text-amber-200 bg-amber-950/70 border border-amber-700/60 active:scale-95 transition"
+          class="hidden sm:inline-flex items-center px-2 py-1 text-[11px] font-medium rounded-lg text-amber-200 bg-amber-950/70 border border-amber-700/60 active:scale-95 transition"
           title="โหลดตัวอย่างตามต้นฉบับ"
         >
           <svg class="w-3.5 h-3.5 text-amber-400 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -308,7 +313,7 @@
         <button
           type="button"
           @click="showMobileExportSheet = true"
-          class="inline-flex items-center px-2 py-1 text-[11px] font-medium rounded-lg text-emerald-100 bg-emerald-900/80 border border-emerald-700/60 active:scale-95 transition"
+          class="inline-flex items-center px-2.5 py-1 text-[11px] font-medium rounded-lg text-emerald-100 bg-emerald-900/80 border border-emerald-700/60 active:scale-95 transition shrink-0"
           title="ตัวเลือกส่งออกไฟล์"
         >
           <svg class="w-3.5 h-3.5 mr-1 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -321,7 +326,7 @@
         <button
           type="button"
           @click="showMobileMenu = !showMobileMenu"
-          class="p-1.5 text-xs rounded-lg text-slate-300 bg-slate-800 border border-slate-700"
+          class="p-1.5 text-xs rounded-lg text-slate-300 bg-slate-800 border border-slate-700 shrink-0"
           title="เมนูเพิ่มเติม"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -400,61 +405,61 @@
   </div>
 
   <!-- Mobile / Tablet Tab Switcher (< lg) -->
-  <div class="lg:hidden sticky top-[53px] sm:top-[61px] z-30 bg-slate-100/95 backdrop-blur border-b border-slate-200 px-3 py-2 no-print">
+  <div class="lg:hidden sticky top-[53px] sm:top-[61px] z-30 bg-slate-100/95 backdrop-blur border-b border-slate-200 px-2 sm:px-3 py-1.5 sm:py-2 no-print">
     <div class="max-w-md mx-auto grid grid-cols-2 p-1 bg-slate-200/90 rounded-xl gap-1 shadow-inner">
       <button
         type="button"
         @click="setMobileTab('form')"
-        class="flex items-center justify-center py-2 text-xs font-semibold rounded-lg transition"
+        class="flex items-center justify-center py-2 px-1 text-xs font-semibold rounded-lg transition min-w-0"
         :class="activeMobileTab === 'form' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'"
       >
-        <svg class="w-4 h-4 mr-1.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-4 h-4 mr-1 text-indigo-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
         </svg>
-        กรอกข้อมูล (Form)
+        <span class="truncate">กรอกข้อมูล</span>
       </button>
       <button
         type="button"
         @click="setMobileTab('preview')"
-        class="flex items-center justify-center py-2 text-xs font-semibold rounded-lg transition"
+        class="flex items-center justify-center py-2 px-1 text-xs font-semibold rounded-lg transition min-w-0"
         :class="activeMobileTab === 'preview' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'"
       >
-        <svg class="w-4 h-4 mr-1.5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-4 h-4 mr-1 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
         </svg>
-        ดูใบเสนอราคา A4
-        <span class="ml-1.5 px-1.5 py-0.5 bg-emerald-100 text-emerald-800 rounded-full text-[10px]" x-text="quotation.items.length"></span>
+        <span class="truncate">ดูใบเสนอราคา</span>
+        <span class="ml-1 px-1.5 py-0.5 bg-emerald-100 text-emerald-800 rounded-full text-[10px] shrink-0" x-text="quotation.items.length"></span>
       </button>
     </div>
   </div>
 
   <!-- Main Responsive Split Workspace -->
-  <main class="flex-1 max-w-[1700px] w-full mx-auto px-3 sm:px-6 py-4 sm:py-6 pb-24 lg:pb-12">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+  <main class="flex-1 max-w-[1700px] w-full mx-auto px-2 sm:px-6 py-3 sm:py-6 pb-24 lg:pb-12 overflow-x-hidden">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start">
       
       <!-- =================================================================== -->
       <!-- LEFT PANE: Input Form & Controls                                    -->
       <!-- =================================================================== -->
       <div
-        class="lg:col-span-5 xl:col-span-5 space-y-4"
+        class="lg:col-span-5 xl:col-span-5 space-y-3 sm:space-y-4"
         :class="activeMobileTab === 'form' ? 'block' : 'hidden lg:block'"
       >
         <!-- Top Status & Autosave Indicator -->
-        <div class="flex items-center justify-between px-1 text-xs">
-          <div class="flex items-center space-x-2 text-slate-500">
-            <span class="inline-flex items-center text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-full font-medium text-[11px]">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span>
+        <div class="flex flex-wrap sm:flex-nowrap items-center justify-between gap-1.5 px-0.5 text-xs">
+          <div class="flex items-center space-x-2 text-slate-500 min-w-0">
+            <span class="inline-flex items-center text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-full font-medium text-[11px] truncate">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse shrink-0"></span>
               บันทึกฉบับร่างอัตโนมัติแล้ว
             </span>
           </div>
           <button
             type="button"
             @click="loadDemoTemplate()"
-            class="text-[11px] text-amber-700 hover:text-amber-800 font-medium flex items-center bg-amber-50 hover:bg-amber-100 px-2.5 py-1 rounded-lg border border-amber-200 transition"
+            class="text-[11px] text-amber-700 hover:text-amber-800 font-medium flex items-center bg-amber-50 hover:bg-amber-100 px-2 py-1 rounded-lg border border-amber-200 transition shrink-0"
             title="โหลดข้อมูลตัวอย่างตามไฟล์ต้นแบบ"
           >
-            <svg class="w-3.5 h-3.5 mr-1 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
+            <svg class="w-3.5 h-3.5 mr-1 text-amber-600 shrink-0" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd" />
             </svg>
             ใส่ข้อมูลตัวอย่าง
@@ -462,21 +467,24 @@
         </div>
 
         <!-- 1. ข้อมูลผู้เสนอราคา / ร้านค้า (กรอกครั้งเดียว บันทึกจำไว้อัตโนมัติ) -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4 sm:p-5 space-y-3">
-          <div class="flex items-center justify-between pb-2 border-b border-slate-100">
-            <div class="flex items-center space-x-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-              <h2 class="text-sm font-semibold text-slate-800 font-heading">ข้อมูลผู้เสนอราคา (ร้านค้า / ผู้ขาย)</h2>
-              <span class="hidden sm:inline-flex items-center text-[10px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-3.5 sm:p-5 space-y-3">
+          <div class="flex items-center justify-between gap-1.5 pb-2 border-b border-slate-100 min-w-0">
+            <div class="flex items-center space-x-1.5 sm:space-x-2 min-w-0">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0"></span>
+              <h2 class="text-xs sm:text-sm font-semibold text-slate-800 font-heading truncate">
+                <span class="sm:hidden">ผู้เสนอราคา (ร้านค้า)</span>
+                <span class="hidden sm:inline">ข้อมูลผู้เสนอราคา (ร้านค้า / ผู้ขาย)</span>
+              </h2>
+              <span class="hidden sm:inline-flex items-center text-[10px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 shrink-0">
                 จำไว้ใช้ทุกเอกสารอัตโนมัติ
               </span>
             </div>
             <button
               type="button"
               @click="showSellerFields = !showSellerFields"
-              class="text-xs text-slate-600 hover:text-emerald-700 font-medium flex items-center px-2.5 py-1 rounded-lg border border-slate-200 bg-slate-50 hover:bg-emerald-50 transition"
+              class="text-xs text-slate-600 hover:text-emerald-700 font-medium flex items-center px-2 py-1 rounded-lg border border-slate-200 bg-slate-50 hover:bg-emerald-50 transition shrink-0"
             >
-              <span x-text="showSellerFields ? 'ย่อเก็บ ▴' : 'แก้ไขข้อมูลร้าน ✏️'"></span>
+              <span x-text="showSellerFields ? 'ย่อเก็บ ▴' : 'แก้ไข ✏️'"></span>
             </button>
           </div>
 
@@ -576,10 +584,10 @@
         </div>
 
         <!-- 2. ข้อมูลลูกค้าและเอกสาร (Customer & Document Details) -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4 sm:p-5 space-y-4">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-3.5 sm:p-5 space-y-3.5 sm:space-y-4">
           <div class="flex items-center space-x-2 pb-2 border-b border-slate-100">
-            <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
-            <h2 class="text-sm font-semibold text-slate-800 font-heading">ข้อมูลลูกค้า & โครงการ (Customer & Job)</h2>
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-500 shrink-0"></span>
+            <h2 class="text-xs sm:text-sm font-semibold text-slate-800 font-heading truncate">ข้อมูลลูกค้า & โครงการ (Customer & Job)</h2>
           </div>
 
           <!-- Customer Attention Name with Past Customers Autocomplete Datalist -->
@@ -587,7 +595,7 @@
             <label class="block text-xs font-medium text-slate-700 mb-1">
               เรียน / Attention (ชื่อผู้ติดต่อ หรือ บริษัทลูกค้า)
               <span x-show="pastCustomers.length > 0" class="text-[11px] text-blue-600 font-normal ml-1">
-                (พิมพ์เพื่อเลือกลูกค้าเดิมได้)
+                (เลือกเดิมได้)
               </span>
             </label>
             <input
@@ -596,7 +604,7 @@
               @input="onCustomerSelect($event.target.value)"
               list="past-customer-datalist"
               placeholder="เช่น บริษัท เพิ่ม เอสเคท จำกัด หรือ คุณสมชาย ใจดี"
-              class="w-full text-base sm:text-sm px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+              class="w-full min-w-0 text-base sm:text-sm px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
             />
             <!-- Native HTML5 Datalist for Instant Zero-Overhead Mobile Autocomplete -->
             <datalist id="past-customer-datalist">
@@ -613,7 +621,7 @@
               x-model="quotation.customer.address"
               rows="2"
               placeholder="ระบุที่อยู่ของลูกค้า..."
-              class="w-full text-base sm:text-sm px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none bg-white"
+              class="w-full min-w-0 text-base sm:text-sm px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none bg-white"
             ></textarea>
           </div>
 
@@ -624,26 +632,26 @@
               type="text"
               x-model="quotation.jobTitle"
               placeholder="เช่น งานระบบน้ำอัตโนมัติ หรือ งานออกแบบตกแต่ง"
-              class="w-full text-base sm:text-sm px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+              class="w-full min-w-0 text-base sm:text-sm px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
             />
           </div>
 
           <!-- Document Number & Date (Clean 2-Col Grid) -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-100">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 pt-2 border-t border-slate-100">
             <!-- Quotation Number -->
-            <div>
+            <div class="min-w-0">
               <label class="block text-xs font-medium text-slate-600 mb-1">เลขที่ใบเสนอราคา (No.)</label>
-              <div class="relative flex items-center">
+              <div class="relative flex items-center min-w-0">
                 <input
                   type="text"
                   x-model="quotation.docNo"
                   placeholder="QT-202611-0001"
-                  class="w-full text-base sm:text-sm font-mono px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-slate-50/60"
+                  class="w-full min-w-0 text-base sm:text-sm font-mono pl-3.5 pr-24 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-slate-50/60"
                 />
                 <button
                   type="button"
                   @click="quotation.docNo = StorageManager.generateDocNo(quotation.docDate); flashNotice('รันเลขที่ใหม่: ' + quotation.docNo)"
-                  class="absolute right-1 px-2.5 py-1 text-xs font-medium text-slate-600 hover:text-blue-700 bg-slate-200/80 hover:bg-blue-100 rounded-lg transition active:scale-95"
+                  class="absolute right-1 px-2.5 py-1 text-xs font-medium text-slate-600 hover:text-blue-700 bg-slate-200/80 hover:bg-blue-100 rounded-lg transition active:scale-95 shrink-0"
                   title="รันเลขที่ใหม่ตามวันที่ปัจจุบัน"
                 >
                   รันเลขใหม่
@@ -748,8 +756,8 @@
                     </div>
 
                     <!-- Quantity, Unit, Price, Amount Fields -->
-                    <div class="grid grid-cols-2 sm:grid-cols-12 gap-2.5 items-center">
-                      <div class="col-span-1 sm:col-span-3">
+                    <div class="grid grid-cols-2 sm:grid-cols-12 gap-2 sm:gap-2.5 items-center">
+                      <div class="col-span-1 sm:col-span-3 min-w-0">
                         <label class="block text-[11px] text-slate-500 font-medium mb-1">จำนวน</label>
                         <input
                           type="number"
@@ -758,19 +766,19 @@
                           x-model.number="item.qty"
                           @input="calculateTotals()"
                           placeholder="1"
-                          class="w-full text-base sm:text-sm px-3 py-2 rounded-xl border border-slate-300 text-center bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                          class="w-full min-w-0 text-base sm:text-sm px-3 py-2 rounded-xl border border-slate-300 text-center bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                         />
                       </div>
-                      <div class="col-span-1 sm:col-span-3">
+                      <div class="col-span-1 sm:col-span-3 min-w-0">
                         <label class="block text-[11px] text-slate-500 font-medium mb-1">หน่วย</label>
                         <input
                           type="text"
                           x-model="item.unit"
                           placeholder="ชุด, งาน, ชิ้น"
-                          class="w-full text-base sm:text-sm px-3 py-2 rounded-xl border border-slate-300 text-center bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                          class="w-full min-w-0 text-base sm:text-sm px-3 py-2 rounded-xl border border-slate-300 text-center bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                         />
                       </div>
-                      <div class="col-span-1 sm:col-span-3">
+                      <div class="col-span-1 sm:col-span-3 min-w-0">
                         <label class="block text-[11px] text-slate-500 font-medium mb-1">ราคา/หน่วย</label>
                         <input
                           type="number"
@@ -779,10 +787,10 @@
                           x-model.number="item.unitPrice"
                           @input="calculateTotals()"
                           placeholder="0.00"
-                          class="w-full text-base sm:text-sm px-3 py-2 rounded-xl border border-slate-300 text-right bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none font-mono"
+                          class="w-full min-w-0 text-base sm:text-sm px-3 py-2 rounded-xl border border-slate-300 text-right bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none font-mono"
                         />
                       </div>
-                      <div class="col-span-1 sm:col-span-3 text-right bg-slate-100 sm:bg-slate-50 p-2 rounded-xl border border-slate-200/60">
+                      <div class="col-span-1 sm:col-span-3 min-w-0 text-right bg-slate-100 sm:bg-slate-50 p-2 rounded-xl border border-slate-200/60">
                         <span class="block text-[10px] text-slate-500 font-medium">รวมเงิน</span>
                         <span class="text-sm font-bold text-slate-900 block truncate font-mono" x-text="formatCurrency(item.amount) + ' ฿'"></span>
                       </div>
@@ -792,7 +800,7 @@
 
                 <!-- Sub-Item Bullet Layout -->
                 <template x-if="item.type === 'bullet'">
-                  <div class="flex items-center space-x-2">
+                  <div class="flex items-center space-x-1.5 sm:space-x-2 min-w-0">
                     <span class="inline-flex items-center text-xs font-medium text-slate-500 shrink-0">
                       <svg class="w-3.5 h-3.5 mr-1 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -803,12 +811,12 @@
                       type="text"
                       x-model="item.description"
                       placeholder=" - รายละเอียดข้อย่อย..."
-                      class="flex-1 text-base sm:text-xs px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-400 bg-white"
+                      class="flex-1 min-w-0 text-base sm:text-xs px-2.5 sm:px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-400 bg-white"
                     />
                     <button
                       type="button"
                       @click="removeItemRow(index)"
-                      class="text-slate-400 hover:text-rose-600 transition p-1.5 rounded-lg hover:bg-rose-50"
+                      class="shrink-0 text-slate-400 hover:text-rose-600 transition p-1.5 rounded-lg hover:bg-rose-50"
                       title="ลบข้อย่อยนี้"
                     >
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -820,7 +828,7 @@
 
                 <!-- Note / Payment Preset Layout -->
                 <template x-if="item.type === 'note'">
-                  <div class="flex items-center space-x-2">
+                  <div class="flex items-center space-x-1.5 sm:space-x-2 min-w-0">
                     <span class="inline-flex items-center text-xs font-semibold text-amber-800 shrink-0">
                       <svg class="w-3.5 h-3.5 mr-1 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
@@ -831,12 +839,12 @@
                       type="text"
                       x-model="item.description"
                       placeholder="หัวข้อหมายเหตุ เช่น การเบิกค่างวดงาน..."
-                      class="flex-1 text-base sm:text-xs font-semibold px-3 py-2 rounded-xl border border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white text-amber-900"
+                      class="flex-1 min-w-0 text-base sm:text-xs font-semibold px-2.5 sm:px-3 py-2 rounded-xl border border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white text-amber-900"
                     />
                     <button
                       type="button"
                       @click="removeItemRow(index)"
-                      class="text-slate-400 hover:text-rose-600 transition p-1.5 rounded-lg hover:bg-rose-50"
+                      class="shrink-0 text-slate-400 hover:text-rose-600 transition p-1.5 rounded-lg hover:bg-rose-50"
                       title="ลบข้อความนี้"
                     >
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1146,28 +1154,29 @@
   <!-- ===================================================================== -->
   <!-- FLOATING MOBILE BOTTOM ACTION BAR (< lg)                              -->
   <!-- ===================================================================== -->
-  <div class="fixed bottom-3 left-3 right-3 z-40 lg:hidden no-print">
-    <div class="bg-slate-900/95 backdrop-blur-md text-white p-2 rounded-2xl shadow-2xl border border-slate-800 flex items-center justify-between gap-2 max-w-md mx-auto">
+  <div class="fixed bottom-2.5 left-2 right-2 sm:bottom-3 sm:left-3 sm:right-3 z-40 lg:hidden no-print">
+    <div class="bg-slate-900/95 backdrop-blur-md text-white p-1.5 sm:p-2 rounded-2xl shadow-2xl border border-slate-800 flex items-center justify-between gap-1.5 sm:gap-2 max-w-md mx-auto">
       <!-- Toggle Mobile View Tab -->
       <button
         type="button"
         @click="setMobileTab(activeMobileTab === 'form' ? 'preview' : 'form')"
-        class="flex-1 flex items-center justify-center py-2 px-3 rounded-xl text-xs font-medium bg-slate-800 hover:bg-slate-700 transition active:scale-95"
+        class="flex-1 min-w-0 flex items-center justify-center py-2 px-2 sm:px-3 rounded-xl text-xs font-medium bg-slate-800 hover:bg-slate-700 transition active:scale-95"
       >
         <template x-if="activeMobileTab === 'form'">
-          <span class="flex items-center text-emerald-400">
-            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <span class="flex items-center text-emerald-400 min-w-0 truncate">
+            <svg class="w-4 h-4 mr-1 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
             </svg>
-            ดู A4 (<span x-text="formatCurrency(quotation.totalAmount)"></span> ฿)
+            <span class="truncate">ดู A4</span>
+            <span class="font-mono ml-1 font-bold text-[11px] truncate" x-show="quotation.totalAmount > 0" x-text="'(' + formatCurrency(quotation.totalAmount) + ' ฿)'"></span>
           </span>
         </template>
         <template x-if="activeMobileTab === 'preview'">
-          <span class="flex items-center text-indigo-400">
-            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <span class="flex items-center text-indigo-400 min-w-0 truncate">
+            <svg class="w-4 h-4 mr-1 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
             </svg>
-            แก้ไขฟอร์ม
+            <span class="truncate">แก้ไขฟอร์ม</span>
           </span>
         </template>
       </button>
@@ -1176,10 +1185,10 @@
       <button
         type="button"
         @click="saveQuotation()"
-        class="flex items-center justify-center px-3 py-2 rounded-xl text-xs font-medium bg-emerald-600 hover:bg-emerald-500 text-white transition active:scale-95"
+        class="shrink-0 flex items-center justify-center px-2.5 sm:px-3 py-2 rounded-xl text-xs font-medium bg-emerald-600 hover:bg-emerald-500 text-white transition active:scale-95"
         title="บันทึกเอกสาร"
       >
-        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-4 h-4 mr-1 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2zM17 21v-8H7v8M7 3v5h8"></path>
         </svg>
         บันทึก
@@ -1189,9 +1198,9 @@
       <button
         type="button"
         @click="showMobileExportSheet = true"
-        class="flex items-center justify-center px-3 py-2 rounded-xl text-xs font-medium bg-gradient-to-r from-emerald-600 to-teal-600 text-white transition active:scale-95"
+        class="shrink-0 flex items-center justify-center px-2.5 sm:px-3 py-2 rounded-xl text-xs font-medium bg-gradient-to-r from-emerald-600 to-teal-600 text-white transition active:scale-95"
       >
-        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-4 h-4 mr-1 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
         </svg>
         ส่งออก
@@ -1362,8 +1371,8 @@
 
           <!-- History Rows -->
           <template x-for="item in filteredHistory()" :key="item.id">
-            <div class="p-3 sm:p-4 hover:bg-slate-50 transition flex items-center justify-between gap-3 sm:gap-4">
-              <div class="space-y-1 min-w-0 flex-1">
+            <div class="p-3 sm:p-4 hover:bg-slate-50 transition flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4">
+              <div class="space-y-1 min-w-0 w-full sm:w-auto flex-1">
                 <div class="flex items-center space-x-2">
                   <span class="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200" x-text="item.docNo"></span>
                   <span class="text-xs text-slate-500" x-text="formatDateShort(item.docDate)"></span>
@@ -1373,43 +1382,45 @@
               </div>
 
               <!-- Price & Action Buttons -->
-              <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
-                <div class="text-right pr-1 sm:pr-2">
+              <div class="flex items-center justify-between sm:justify-end space-x-2 sm:space-x-3 w-full sm:w-auto shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+                <div class="text-left sm:text-right pr-1 sm:pr-2">
                   <div class="text-xs sm:text-sm font-bold text-slate-900" x-text="formatCurrency(item.totalAmount) + ' ฿'"></div>
                   <div class="text-[10px] sm:text-[11px] text-slate-400" x-text="(item.items?.filter(i => i.type === 'item')?.length || 0) + ' รายการ'"></div>
                 </div>
 
-                <!-- Load/Edit -->
-                <button
-                  type="button"
-                  @click="loadFromHistory(item)"
-                  class="inline-flex items-center px-2 sm:px-2.5 py-1.5 text-xs font-medium rounded-lg text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 transition"
-                  title="เปิดเอกสารนี้มาแก้ไข"
-                >
-                  เปิด
-                </button>
+                <div class="flex items-center space-x-1 sm:space-x-1.5 shrink-0">
+                  <!-- Load/Edit -->
+                  <button
+                    type="button"
+                    @click="loadFromHistory(item)"
+                    class="inline-flex items-center px-2.5 py-1.5 text-xs font-medium rounded-lg text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 transition"
+                    title="เปิดเอกสารนี้มาแก้ไข"
+                  >
+                    เปิด
+                  </button>
 
-                <!-- Duplicate -->
-                <button
-                  type="button"
-                  @click="duplicateFromHistory(item.id)"
-                  class="inline-flex items-center px-2 sm:px-2.5 py-1.5 text-xs font-medium rounded-lg text-slate-700 bg-slate-100 hover:bg-slate-200 transition"
-                  title="ทำสำเนาเป็นเอกสารใหม่พร้อมเลขที่ใหม่"
-                >
-                  คัดลอก
-                </button>
+                  <!-- Duplicate -->
+                  <button
+                    type="button"
+                    @click="duplicateFromHistory(item.id)"
+                    class="inline-flex items-center px-2.5 py-1.5 text-xs font-medium rounded-lg text-slate-700 bg-slate-100 hover:bg-slate-200 transition"
+                    title="ทำสำเนาเป็นเอกสารใหม่พร้อมเลขที่ใหม่"
+                  >
+                    คัดลอก
+                  </button>
 
-                <!-- Delete -->
-                <button
-                  type="button"
-                  @click="deleteFromHistory(item.id)"
-                  class="inline-flex items-center p-1.5 text-xs font-medium rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition"
-                  title="ลบเอกสารนี้"
-                >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                  </svg>
-                </button>
+                  <!-- Delete -->
+                  <button
+                    type="button"
+                    @click="deleteFromHistory(item.id)"
+                    class="inline-flex items-center p-1.5 text-xs font-medium rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition"
+                    title="ลบเอกสารนี้"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
           </template>

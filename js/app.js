@@ -185,11 +185,20 @@
       computeScale() {
         if (typeof document === 'undefined') return;
         const container = document.getElementById('preview-outer-container');
-        if (!container) return;
-        const availableWidth = container.clientWidth - 24;
+        let containerWidth = container ? container.clientWidth : 0;
+        if (!containerWidth || containerWidth < 50) {
+          if (typeof window !== 'undefined') {
+            containerWidth = Math.max(260, window.innerWidth - 24);
+          } else {
+            containerWidth = 360;
+          }
+        }
+        // Inner available width subtracting container padding (p-2 = 16px, plus 8px safety)
+        const availableWidth = Math.max(100, containerWidth - 24);
         if (this.previewZoom === 'fit') {
-          if (availableWidth < 810) {
-            this.computedScale = Math.max(0.3, Math.round((availableWidth / 804) * 100) / 100);
+          if (availableWidth < 800) {
+            // Math.floor ensures scaled width (794 * computedScale) never exceeds available width even by 0.1px
+            this.computedScale = Math.max(0.2, Math.floor((availableWidth / 794) * 100) / 100);
           } else {
             this.computedScale = 1.0;
           }
@@ -208,9 +217,9 @@
       setMobileTab(tab) {
         this.activeMobileTab = tab;
         if (tab === 'preview') {
-          setTimeout(() => {
-            this.computeScale();
-          }, 60);
+          this.computeScale();
+          setTimeout(() => this.computeScale(), 40);
+          setTimeout(() => this.computeScale(), 150);
         }
       },
 
