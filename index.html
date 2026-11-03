@@ -963,8 +963,8 @@
                 <h1 class="font-bold tracking-wide text-slate-900 font-heading" style="font-size: 20pt; line-height: 1.2;">ใบเสนอราคา</h1>
               </div>
 
-              <!-- Row 2: Header QUOTATION -->
-              <div class="text-center pb-2">
+              <!-- Row 2: Header QUOTATION + Row 3 Divider Border -->
+              <div class="text-center pb-2 border-b border-slate-700">
                 <h2 class="font-bold tracking-[0.16em] text-slate-600 font-heading" style="font-size: 11pt; line-height: 1.2;">QUOTATION</h2>
               </div>
 
@@ -1032,29 +1032,29 @@
               <!-- ================================================================= -->
               <div class="mt-3.5">
                 <table class="w-full border-collapse" style="table-layout: fixed;">
-                  <!-- Column Widths Proportions: 6.5%, 53.5%, 7.5%, 7.5%, 12.5%, 12.5% -->
+                  <!-- Column Widths Proportions matching Excel reference template (5.75, 54.88, 6.88, 6.75, 9.63, 10.25 -> 94.14 total): 6.1%, 58.3%, 7.3%, 7.2%, 10.2%, 10.9% -->
                   <colgroup>
-                    <col style="width: 6.5%;" />   <!-- Col A: ลำดับที่ / ITEM -->
-                    <col style="width: 53.5%;" />  <!-- Col B: รายการ / DESCRIPTION -->
-                    <col style="width: 7.5%;" />   <!-- Col C: หน่วย -->
-                    <col style="width: 7.5%;" />   <!-- Col D: จำนวน -->
-                    <col style="width: 12.5%;" />  <!-- Col E: ราคา/หน่วย -->
-                    <col style="width: 12.5%;" />  <!-- Col F: จำนวนเงิน -->
+                    <col style="width: 6.1%;" />   <!-- Col A: ลำดับที่ / ITEM (5.75) -->
+                    <col style="width: 58.3%;" />  <!-- Col B: รายการ / DESCRIPTION (54.88) -->
+                    <col style="width: 7.3%;" />   <!-- Col C: หน่วย (6.88) -->
+                    <col style="width: 7.2%;" />   <!-- Col D: จำนวน (6.75) -->
+                    <col style="width: 10.2%;" />  <!-- Col E: ราคา/หน่วย (9.63) -->
+                    <col style="width: 10.9%;" />  <!-- Col F: จำนวนเงิน (10.25) -->
                   </colgroup>
 
-                  <!-- Row 10 & 11: Two-Tier Header -->
+                  <!-- Row 10 & 11: Two-Tier Header with 100% complete border frame -->
                   <thead>
                     <tr class="border-t border-slate-700 font-bold text-center">
-                      <th class="border-l border-r border-slate-700 pt-1.5 pb-0 px-1 font-bold text-center align-bottom" style="font-size: 9.5pt; line-height: 1.2;">ลำดับที่</th>
-                      <th class="border-l border-r border-slate-700 pt-1.5 pb-0 px-2 font-bold text-center align-bottom" style="font-size: 10pt; line-height: 1.2;">รายการ</th>
-                      <th rowspan="2" class="border-l border-r border-b border-slate-700 py-1 px-1 font-bold text-center align-middle" style="font-size: 10pt;">หน่วย</th>
-                      <th rowspan="2" class="border-l border-r border-b border-slate-700 py-1 px-1 font-bold text-center align-middle" style="font-size: 10pt;">จำนวน</th>
-                      <th rowspan="2" class="border-l border-r border-b border-slate-700 py-1 px-1 font-bold text-center align-middle" style="font-size: 9.5pt; line-height: 1.2;">ราคา/หน่วย</th>
-                      <th rowspan="2" class="border-l border-r border-b border-slate-700 py-1 px-1 font-bold text-center align-middle" style="font-size: 10pt;">จำนวนเงิน</th>
+                      <th class="border-t border-l border-r border-slate-700 pt-1.5 pb-0.5 px-1 font-bold text-center align-middle" style="font-size: 9.5pt; line-height: 1.2;">ลำดับที่</th>
+                      <th class="border-t border-l border-r border-slate-700 pt-1.5 pb-0.5 px-2 font-bold text-center align-middle" style="font-size: 10pt; line-height: 1.2;">รายการ</th>
+                      <th rowspan="2" class="border-t border-l border-r border-b border-slate-700 py-1 px-1 font-bold text-center align-middle" style="font-size: 10pt;">หน่วย</th>
+                      <th rowspan="2" class="border-t border-l border-r border-b border-slate-700 py-1 px-1 font-bold text-center align-middle" style="font-size: 10pt;">จำนวน</th>
+                      <th rowspan="2" class="border-t border-l border-r border-b border-slate-700 py-1 px-1 font-bold text-center align-middle" style="font-size: 9.5pt; line-height: 1.2;">ราคา/หน่วย</th>
+                      <th rowspan="2" class="border-t border-l border-r border-b border-slate-700 py-1 px-1 font-bold text-center align-middle" style="font-size: 10pt;">จำนวนเงิน</th>
                     </tr>
                     <tr class="border-b border-slate-700 text-center font-bold">
-                      <th class="border-l border-r border-b border-slate-700 pt-0 pb-1.5 px-1 text-center font-bold tracking-wider" style="font-size: 8pt; line-height: 1.2;">ITEM</th>
-                      <th class="border-l border-r border-b border-slate-700 pt-0 pb-1.5 px-2 text-center font-bold tracking-wider" style="font-size: 8pt; line-height: 1.2;">DESCRIPTION</th>
+                      <th class="border-l border-r border-b border-slate-700 pt-0.5 pb-1 px-1 text-center font-bold tracking-wider align-middle" style="font-size: 8pt; line-height: 1.2;">ITEM</th>
+                      <th class="border-l border-r border-b border-slate-700 pt-0.5 pb-1 px-2 text-center font-bold tracking-wider align-middle" style="font-size: 8pt; line-height: 1.2;">DESCRIPTION</th>
                     </tr>
                   </thead>
 
@@ -1103,55 +1103,73 @@
                     </template>
                   </tbody>
 
-                  <!-- Row 29: Total Amount & Thai Baht Text -->
-                  <tfoot style="font-size: 10.5pt;">
+                  <!-- Table Footer: Row 29 (Totals) + Rows 30-34 (Framed Signature Boxes) -->
+                  <tfoot style="font-size: 10pt;">
+                    <!-- Row 29: Total Amount & Thai Baht Text -->
                     <tr class="border-t border-b border-slate-700 font-bold" style="height: 30px;">
                       <!-- Col A to C Merged: Thai Baht Text -->
-                      <td colspan="3" class="border-l border-r border-slate-700 pt-1 pb-1.5 px-3 text-center align-middle font-bold text-slate-900" x-text="quotation.totalTextThai"></td>
+                      <td colspan="3" class="border-l border-r border-slate-700 pt-1 pb-1 px-3 text-center align-middle font-bold text-slate-900" x-text="quotation.totalTextThai"></td>
 
                       <!-- Col D to E Merged: รวมเงิน Label -->
-                      <td colspan="2" class="border-l border-r border-slate-700 pt-1 pb-1.5 px-2 text-center align-middle font-bold text-slate-900">รวมเงิน</td>
+                      <td colspan="2" class="border-l border-r border-slate-700 pt-1 pb-1 px-2 text-center align-middle font-bold text-slate-900">รวมเงิน</td>
 
                       <!-- Col F: Total Amount -->
-                      <td class="border-l border-r border-slate-700 pt-1 pb-1.5 pr-2.5 pl-1 text-right align-middle font-bold text-slate-900 text-[11pt]" style="font-variant-numeric: tabular-nums;" x-text="formatCurrency(quotation.totalAmount)"></td>
+                      <td class="border-l border-r border-slate-700 pt-1 pb-1 pr-2.5 pl-1 text-right align-middle font-bold text-slate-900 text-[11pt]" style="font-variant-numeric: tabular-nums;" x-text="formatCurrency(quotation.totalAmount)"></td>
+                    </tr>
+
+                    <!-- Row 30: Spacer Row between Totals and Signature Boxes -->
+                    <tr style="height: 14px;">
+                      <td colspan="3" class="border-l border-r border-slate-700"></td>
+                      <td colspan="3" class="border-r border-slate-700"></td>
+                    </tr>
+
+                    <!-- Row 31/32: Signature Header Row -->
+                    <tr style="height: 32px;" class="align-middle">
+                      <!-- Box 1 (Cols A-C): Approver Line -->
+                      <td colspan="3" class="border-l border-r border-slate-700 px-3">
+                        <div class="flex items-end">
+                          <span class="font-bold text-slate-900 whitespace-nowrap shrink-0 mr-2" style="font-size: 10pt;">ผู้อนุมัติ :</span>
+                          <span class="border-b border-dotted border-slate-500 w-full mb-1"></span>
+                        </div>
+                      </td>
+
+                      <!-- Box 2 (Cols D-F): Proposer Line -->
+                      <td colspan="3" class="border-r border-slate-700 px-3">
+                        <div class="flex items-baseline justify-center">
+                          <span class="font-bold text-slate-900 whitespace-nowrap shrink-0 mr-1.5" style="font-size: 9.5pt;">ผู้เสนอ :</span>
+                          <span class="border-b border-slate-400 font-bold text-slate-900 text-center pb-0.5 whitespace-nowrap grow" style="font-size: 8.5pt;" x-text="quotation.seller?.name || ''"></span>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <!-- Row 33: Position & Date Row -->
+                    <tr style="height: 30px;" class="align-middle">
+                      <!-- Box 1 (Cols A-C): Position Line -->
+                      <td colspan="3" class="border-l border-r border-slate-700 px-3">
+                        <div class="flex items-end">
+                          <span class="font-bold text-slate-900 whitespace-nowrap shrink-0 mr-2" style="font-size: 10pt;">ตำแหน่ง :</span>
+                          <span class="border-b border-dotted border-slate-500 w-full mb-1"></span>
+                        </div>
+                      </td>
+
+                      <!-- Box 2 (Cols D-F): Date Line -->
+                      <td colspan="3" class="border-r border-slate-700 px-3 text-center">
+                        <span class="text-slate-700" style="font-size: 9.5pt;" x-text="formatDateLong(quotation.docDate)"></span>
+                      </td>
+                    </tr>
+
+                    <!-- Row 34: Parenthesis & Bottom Frame Border -->
+                    <tr style="height: 28px;" class="align-middle border-b border-slate-700">
+                      <!-- Box 1 (Cols A-C): Centered Parenthesis -->
+                      <td colspan="3" class="border-l border-r border-slate-700 text-center text-slate-600 font-normal">
+                        (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
+                      </td>
+
+                      <!-- Box 2 (Cols D-F): Bottom Border Frame -->
+                      <td colspan="3" class="border-r border-slate-700"></td>
                     </tr>
                   </tfoot>
                 </table>
-              </div>
-
-              <!-- ================================================================= -->
-              <!-- FOOTER SIGNATURES: Matching Row 32 to 34                          -->
-              <!-- ================================================================= -->
-              <div class="mt-8 pt-4 grid grid-cols-2 gap-8 text-slate-800" style="font-size: 10pt; line-height: 1.6;">
-                
-                <!-- Left: Approver (Customer) -->
-                <div class="grid grid-cols-[auto_1fr] gap-x-2 gap-y-3 items-end">
-                  <!-- Row 1: Approver Signature Line -->
-                  <span class="font-medium shrink-0 whitespace-nowrap">ผู้อนุมัติ :</span>
-                  <span class="border-b border-dotted border-slate-500 w-full mb-1"></span>
-
-                  <!-- Row 2: Approver Position Line -->
-                  <span class="font-medium shrink-0 whitespace-nowrap">ตำแหน่ง :</span>
-                  <span class="border-b border-dotted border-slate-500 w-full mb-1"></span>
-
-                  <!-- Row 3: Sign Parenthesis - centered directly under the dotted lines -->
-                  <span></span>
-                  <div class="text-center text-slate-600 pt-1 w-full">
-                    (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
-                  </div>
-                </div>
-
-                <!-- Right: Seller (Contractor) -->
-                <div class="grid grid-cols-[auto_1fr] gap-x-2 gap-y-3 items-baseline">
-                  <!-- Row 1: Seller Name & Signature Underline -->
-                  <span class="font-medium shrink-0 whitespace-nowrap">ผู้เสนอ :</span>
-                  <div class="border-b border-slate-400 pb-1.5 text-center font-bold text-slate-900 w-full min-h-[26px]" x-text="quotation.seller?.name || ''"></div>
-
-                  <!-- Row 2: Document Date - centered directly under the seller name/signature line -->
-                  <span></span>
-                  <div class="text-center text-slate-700 w-full min-h-[22px]" x-text="formatDateLong(quotation.docDate)"></div>
-                </div>
-
               </div>
 
             </div>
