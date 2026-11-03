@@ -1,0 +1,7 @@
+# Ignore private Excel files containing real business/financial data
+*.xlsx
+*.xls
+.DS_Store
+dist/
+node_modules/
+.env*
