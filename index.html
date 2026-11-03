@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบออกใบเสนอราคา (Quotation Generator)</title>
+
+  <!-- Google Fonts: Sarabun (Official Thai Document standard) & Prompt (Modern UI Heading) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Sarabun', 'sans-serif'],
+            heading: ['Prompt', 'sans-serif'],
+            doc: ['Sarabun', 'Angsana New', 'sans-serif'],
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Custom & Print Stylesheet -->
+  <style>
+    [x-cloak] { display: none !important; }
+
+    body {
+      font-family: 'Sarabun', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4, .font-heading {
+      font-family: 'Prompt', sans-serif;
+    }
+
+    /* Fixed A4 Page Container for Live Preview & html2canvas */
+    .a4-page {
+      width: 794px; /* Standard A4 width at 96 DPI (210mm) */
+      min-height: 1123px; /* Standard A4 height at 96 DPI (297mm) */
+      padding: 38px 45px; /* ~10-12mm padding */
+      margin: 0 auto;
+      background: #ffffff;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    /* Print Stylesheet for Pristine 1-Page A4 Printing */
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 8mm 10mm;
+      }
+
+      html, body {
+        background: #ffffff !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      .no-print {
+        display: none !important;
+      }
+
+      .print-only {
+        display: block !important;
+      }
+
+      .a4-page {
+        width: 100% !important;
+        min-height: auto !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
+      }
+
+      #quotation-preview {
+        box-shadow: none !important;
+        border: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      table {
+        page-break-inside: avoid;
+      }
+
+      tr {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+
+  <!-- External Library CDNs (ExcelJS, html2canvas, jsPDF) -->
+  <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+  <!-- Application Modular Scripts in Dependency Order -->
+  <script src="js/bahtText.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/excelExport.js"></script>
+  <script src="js/pdfExport.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- Alpine.js 3.x CDN (Deferred) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+
+<body x-data="quotationApp" class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- Toast Notification Banner -->
+  <div
+    x-show="saveNotice"
+    x-cloak
+    x-transition:enter="transition ease-out duration-300"
+    x-transition:enter-start="opacity-0 -translate-y-4 scale-95"
+    x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+    x-transition:leave="transition ease-in duration-200"
+    x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+    x-transition:leave-end="opacity-0 -translate-y-4 scale-95"
+    class="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-slate-900/90 text-white backdrop-blur px-5 py-2.5 rounded-full shadow-2xl flex items-center space-x-3 text-sm border border-slate-700/60 no-print"
+  >
+    <div class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></div>
+    <span class="font-medium" x-text="saveNotice"></span>
+  </div>
+
+  <!-- Top Navigation & Action Bar -->
+  <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-40 no-print shadow-md">
+    <div class="max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Logo & App Brand -->
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-900/30">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="text-base font-semibold tracking-tight text-white font-heading">Quotation Generator</h1>
+            <span class="text-[11px] font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full">มาตรฐาน A4</span>
+          </div>
+          <p class="text-xs text-slate-400">ระบบสร้างและออกใบเสนอราคาตามแบบมาตรฐาน Excel</p>
+        </div>
+      </div>
+
+      <!-- Main Action Buttons -->
+      <div class="flex items-center space-x-2">
+        <!-- New Quotation -->
+        <button
+          type="button"
+          @click="startNewQuotation()"
+          class="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg text-slate-200 bg-slate-800 hover:bg-slate-700 hover:text-white border border-slate-700 transition"
+          title="สร้างใบเสนอราคาใหม่"
+        >
+          <svg class="w-4 h-4 mr-1.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          เอกสารใหม่
+        </button>
+
+        <!-- Save Quotation -->
+        <button
+          type="button"
+          @click="saveQuotation()"
+          class="inline-flex items-center px-3.5 py-1.5 text-xs font-medium rounded-lg text-white bg-emerald-600 hover:bg-emerald-500 shadow-sm transition active:scale-95"
+          title="บันทึกเอกสารลงเครื่อง"
+        >
+          <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
+          </svg>
+          บันทึก
+        </button>
+
+        <!-- History Modal Button -->
+        <button
+          type="button"
+          @click="refreshHistory(); showHistoryModal = true"
+          class="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg text-slate-200 bg-slate-800 hover:bg-slate-700 hover:text-white border border-slate-700 transition"
+          title="ดูประวัติใบเสนอราคาทั้งหมด"
+        >
+          <svg class="w-4 h-4 mr-1.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          ประวัติ
+          <span
+            x-show="historyList.length > 0"
+            class="ml-1.5 bg-slate-700 text-slate-200 text-[10px] font-semibold px-1.5 py-0.2 rounded-full"
+            x-text="historyList.length"
+          ></span>
+        </button>
+
+        <!-- Seller Profile Settings -->
+        <button
+          type="button"
+          @click="openSellerSettings()"
+          class="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg text-slate-200 bg-slate-800 hover:bg-slate-700 hover:text-white border border-slate-700 transition"
+          title="ตั้งค่าข้อมูลผู้เสนอราคา"
+        >
+          <svg class="w-4 h-4 mr-1.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          </svg>
+          ผู้เสนอราคา
+        </button>
+
+        <div class="h-5 w-px bg-slate-700 mx-1"></div>
+
+        <!-- Export Dropdown / Buttons -->
+        <!-- Export Excel -->
+        <button
+          type="button"
+          @click="exportExcel()"
+          class="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg text-emerald-100 bg-emerald-800/80 hover:bg-emerald-700 border border-emerald-600/50 transition active:scale-95"
+          title="ดาวน์โหลดไฟล์ Excel (.xlsx)"
+        >
+          <svg class="w-4 h-4 mr-1.5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          Excel
+        </button>
+
+        <!-- Export PDF -->
+        <button
+          type="button"
+          @click="exportPDF()"
+          class="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg text-rose-100 bg-rose-800/80 hover:bg-rose-700 border border-rose-600/50 transition active:scale-95"
+          title="ดาวน์โหลดไฟล์ PDF (.pdf)"
+        >
+          <svg class="w-4 h-4 mr-1.5 text-rose-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+          </svg>
+          PDF
+        </button>
+
+        <!-- Export PNG -->
+        <button
+          type="button"
+          @click="exportPNG()"
+          class="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg text-sky-100 bg-sky-800/80 hover:bg-sky-700 border border-sky-600/50 transition active:scale-95"
+          title="ดาวน์โหลดรูปภาพ (.png)"
+        >
+          <svg class="w-4 h-4 mr-1.5 text-sky-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+          PNG
+        </button>
+
+        <!-- Print Document -->
+        <button
+          type="button"
+          @click="printDocument()"
+          class="inline-flex items-center px-3.5 py-1.5 text-xs font-medium rounded-lg text-slate-100 bg-slate-700 hover:bg-slate-600 border border-slate-600 transition active:scale-95"
+          title="พิมพ์เอกสารออกทางเครื่องพิมพ์"
+        >
+          <svg class="w-4 h-4 mr-1.5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+          </svg>
+          พิมพ์
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Responsive Split Workspace -->
+  <main class="flex-1 max-w-[1760px] w-full mx-auto p-4 sm:p-6 lg:p-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+      <!-- =================================================================== -->
+      <!-- LEFT PANE: Input Form (no-print)                                   -->
+      <!-- =================================================================== -->
+      <div class="lg:col-span-5 xl:col-span-5 space-y-6 no-print">
+
+        <!-- 1. Header Information Card -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200/80 p-5 space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+            <div class="flex items-center space-x-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+              <h2 class="text-sm font-semibold text-slate-800 font-heading">ข้อมูลหัวเอกสาร (Header Info)</h2>
+            </div>
+            <button
+              type="button"
+              @click="quotation.docNo = StorageManager.generateDocNo(quotation.docDate)"
+              class="text-xs text-blue-600 hover:text-blue-800 font-medium inline-flex items-center"
+              title="สร้างเลขที่เอกสารลำดับถัดไป"
+            >
+              <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+              </svg>
+              รีเฟรชเลขที่
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Doc No -->
+            <div>
+              <label class="block text-xs font-medium text-slate-600 mb-1">เลขที่เอกสาร (Doc No.)</label>
+              <input
+                type="text"
+                x-model="quotation.docNo"
+                placeholder="เช่น QT-202611-0001"
+                class="w-full text-sm font-mono px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-slate-50/50"
+              />
+            </div>
+
+            <!-- Date -->
+            <div>
+              <label class="block text-xs font-medium text-slate-600 mb-1">วันที่เอกสาร (Date)</label>
+              <input
+                type="date"
+                x-model="quotation.docDate"
+                class="w-full text-sm px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-slate-50/50"
+              />
+            </div>
+          </div>
+
+          <!-- Job Title -->
+          <div>
+            <label class="block text-xs font-medium text-slate-600 mb-1">ชื่องาน / รายละเอียดโครงการ (Job Title)</label>
+            <input
+              type="text"
+              x-model="quotation.jobTitle"
+              placeholder="เช่น งานติดตั้งระบบรดน้ำอัตโนมัติ 4 โซน"
+              class="w-full text-sm px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+        </div>
+
+        <!-- 2. Customer Information Card -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200/80 p-5 space-y-4">
+          <div class="flex items-center space-x-2 pb-3 border-b border-slate-100">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+            <h2 class="text-sm font-semibold text-slate-800 font-heading">ข้อมูลลูกค้า (Customer Info)</h2>
+          </div>
+
+          <!-- Attention Name -->
+          <div>
+            <label class="block text-xs font-medium text-slate-600 mb-1">เรียน / Attention (ชื่อผู้ติดต่อ หรือ บริษัท)</label>
+            <input
+              type="text"
+              x-model="quotation.customer.name"
+              placeholder="เช่น บริษัท ตัวอย่าง จำกัด หรือ คุณสมชาย ใจดี"
+              class="w-full text-sm px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            />
+          </div>
+
+          <!-- Customer Address -->
+          <div>
+            <label class="block text-xs font-medium text-slate-600 mb-1">ที่อยู่ลูกค้า (Address)</label>
+            <textarea
+              x-model="quotation.customer.address"
+              rows="2"
+              placeholder="ระบุที่อยู่ของลูกค้า..."
+              class="w-full text-sm px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-none"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- 3. Dynamic Items Table Card -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200/80 p-5 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100">
+            <div class="flex items-center space-x-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
+              <h2 class="text-sm font-semibold text-slate-800 font-heading">รายการสินค้าและบริการ (Items)</h2>
+            </div>
+            
+            <!-- Quick Add Action Buttons -->
+            <div class="flex items-center space-x-1.5">
+              <button
+                type="button"
+                @click="addItemRow()"
+                class="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-md text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 transition"
+                title="เพิ่มรายการหลักพร้อมจำนวนและราคา"
+              >
+                <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                + รายการหลัก
+              </button>
+              <button
+                type="button"
+                @click="addSubItemRow()"
+                class="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 transition"
+                title="เพิ่มข้อย่อยเพื่ออธิบายรายละเอียด"
+              >
+                <svg class="w-3.5 h-3.5 mr-1 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+                + ข้อย่อย
+              </button>
+              <button
+                type="button"
+                @click="addPaymentTermsPreset()"
+                class="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-md text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 transition"
+                title="ใส่ข้อความการเบิกค่างวดงานสำเร็จรูป"
+              >
+                <svg class="w-3.5 h-3.5 mr-1 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                + เงื่อนไขชำระ
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic Item Rows Container -->
+          <div class="space-y-3 max-h-[520px] overflow-y-auto pr-1">
+            <template x-for="(item, index) in quotation.items" :key="item.id || index">
+              <div class="rounded-lg border transition p-3 space-y-2.5"
+                   :class="{
+                     'bg-white border-slate-200 hover:border-slate-300 shadow-xs': item.type === 'item',
+                     'bg-slate-50/70 border-slate-200/70 border-dashed': item.type === 'bullet',
+                     'bg-amber-50/50 border-amber-200/80': item.type === 'note'
+                   }">
+                
+                <!-- Main Item Row Layout -->
+                <template x-if="item.type === 'item'">
+                  <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center space-x-2">
+                        <span class="inline-flex items-center justify-center w-6 h-6 rounded bg-slate-100 text-slate-700 text-xs font-semibold" x-text="item.itemNo"></span>
+                        <span class="text-xs font-medium text-slate-500">รายการหลัก</span>
+                      </div>
+                      <button
+                        type="button"
+                        @click="removeItemRow(index)"
+                        class="text-slate-400 hover:text-rose-600 transition p-1"
+                        title="ลบรายการนี้"
+                      >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                      </button>
+                    </div>
+
+                    <!-- Description Input -->
+                    <div>
+                      <input
+                        type="text"
+                        x-model="item.description"
+                        placeholder="รายละเอียดรายการสินค้าหรือบริการ..."
+                        class="w-full text-sm px-3 py-1.5 rounded border border-slate-300 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                      />
+                    </div>
+
+                    <!-- Quantity, Unit, Price, Amount Fields -->
+                    <div class="grid grid-cols-12 gap-2 items-center">
+                      <div class="col-span-3">
+                        <label class="block text-[11px] text-slate-500">หน่วย</label>
+                        <input
+                          type="text"
+                          x-model="item.unit"
+                          placeholder="ชุด, ต้น, งาน"
+                          class="w-full text-xs px-2 py-1.5 rounded border border-slate-300 text-center"
+                        />
+                      </div>
+                      <div class="col-span-3">
+                        <label class="block text-[11px] text-slate-500">จำนวน</label>
+                        <input
+                          type="number"
+                          step="any"
+                          x-model.number="item.qty"
+                          @input="calculateTotals()"
+                          placeholder="1"
+                          class="w-full text-xs px-2 py-1.5 rounded border border-slate-300 text-center"
+                        />
+                      </div>
+                      <div class="col-span-3">
+                        <label class="block text-[11px] text-slate-500">ราคา/หน่วย</label>
+                        <input
+                          type="number"
+                          step="any"
+                          x-model.number="item.unitPrice"
+                          @input="calculateTotals()"
+                          placeholder="0.00"
+                          class="w-full text-xs px-2 py-1.5 rounded border border-slate-300 text-right"
+                        />
+                      </div>
+                      <div class="col-span-3 text-right">
+                        <span class="block text-[11px] text-slate-500">จำนวนเงิน</span>
+                        <span class="text-xs font-semibold text-slate-900 block truncate" x-text="formatCurrency(item.amount) + ' ฿'"></span>
+                      </div>
+                    </div>
+                  </div>
+                </template>
+
+                <!-- Sub-Item Bullet Layout -->
+                <template x-if="item.type === 'bullet'">
+                  <div class="flex items-center space-x-2">
+                    <span class="inline-flex items-center text-xs font-medium text-slate-400 shrink-0">
+                      <svg class="w-3.5 h-3.5 mr-1 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                      </svg>
+                      ข้อย่อย
+                    </span>
+                    <input
+                      type="text"
+                      x-model="item.description"
+                      placeholder=" - รายละเอียดข้อย่อย..."
+                      class="flex-1 text-xs px-2.5 py-1.5 rounded border border-slate-300 focus:outline-none focus:ring-1 focus:ring-slate-400 bg-white"
+                    />
+                    <button
+                      type="button"
+                      @click="removeItemRow(index)"
+                      class="text-slate-400 hover:text-rose-600 transition p-1"
+                      title="ลบข้อย่อยนี้"
+                    >
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </template>
+
+                <!-- Note / Payment Preset Layout -->
+                <template x-if="item.type === 'note'">
+                  <div class="flex items-center space-x-2">
+                    <span class="inline-flex items-center text-xs font-medium text-amber-700 shrink-0">
+                      <svg class="w-3.5 h-3.5 mr-1 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                      หัวข้อ
+                    </span>
+                    <input
+                      type="text"
+                      x-model="item.description"
+                      placeholder="หัวข้อหมายเหตุ เช่น การเบิกค่างวดงาน..."
+                      class="flex-1 text-xs font-medium px-2.5 py-1.5 rounded border border-amber-300 focus:outline-none focus:ring-1 focus:ring-amber-500 bg-white text-amber-900"
+                    />
+                    <button
+                      type="button"
+                      @click="removeItemRow(index)"
+                      class="text-slate-400 hover:text-rose-600 transition p-1"
+                      title="ลบข้อความนี้"
+                    >
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </template>
+
+              </div>
+            </template>
+          </div>
+
+          <!-- Total Amount Summary inside Form -->
+          <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-xs font-medium text-slate-500">ยอดรวมทั้งสิ้น (Total)</span>
+            <div class="text-right">
+              <span class="text-lg font-bold text-slate-900" x-text="formatCurrency(quotation.totalAmount) + ' บาท'"></span>
+              <p class="text-xs text-slate-500 italic" x-text="quotation.totalTextThai"></p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- RIGHT PANE: Live Exact A4 Document Preview (id="quotation-preview")  -->
+      <!-- =================================================================== -->
+      <div class="lg:col-span-7 xl:col-span-7 space-y-4">
+        
+        <!-- Preview Control Header -->
+        <div class="flex items-center justify-between no-print px-1">
+          <div class="flex items-center space-x-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+            <h2 class="text-sm font-semibold text-slate-800 font-heading">ตัวอย่างเอกสาร A4 (Live Document Preview)</h2>
+          </div>
+          <span class="text-xs text-slate-500 bg-white px-2.5 py-1 rounded-md border border-slate-200">
+            พรีวิวจำลองขนาด A4 มาตรฐาน (210 × 297 มม.)
+          </span>
+        </div>
+
+        <!-- Scrollable Outer Wrapper for Screen Viewing -->
+        <div class="bg-slate-200/70 p-4 sm:p-6 rounded-2xl border border-slate-300/70 overflow-x-auto shadow-inner flex justify-center">
+          
+          <!-- Exact A4 Document Container -->
+          <div
+            id="quotation-preview"
+            class="a4-page shadow-2xl rounded-sm text-slate-900 leading-normal select-text"
+          >
+            <!-- Row 1: Header ใบเสนอราคา -->
+            <div class="text-center pt-2">
+              <h1 class="text-2xl font-bold tracking-wide text-slate-900" style="font-size: 22pt; line-height: 1.3;">
+                ใบเสนอราคา
+              </h1>
+              <!-- Row 2: Subtitle QUOTATION -->
+              <h2 class="text-lg font-bold tracking-widest text-slate-800" style="font-size: 16pt; line-height: 1.3;">
+                QUOTATION
+              </h2>
+            </div>
+
+            <!-- Rows 4 to 9: Document Meta & Address Information -->
+            <div class="grid grid-cols-12 gap-x-2 mt-4 text-sm" style="font-size: 14pt; line-height: 1.45;">
+              
+              <!-- Left Column: Customer and Seller Info (Cols A-C equivalent) -->
+              <div class="col-span-7 space-y-1">
+                <!-- Row 4: Attention -->
+                <div class="flex items-baseline">
+                  <span class="font-bold shrink-0 mr-1.5">เรียน/Attention :</span>
+                  <span class="font-bold flex-1 break-words" x-text="quotation.customer.name || ''"></span>
+                </div>
+
+                <!-- Row 5: Customer Address -->
+                <div class="flex items-baseline">
+                  <span class="shrink-0 mr-1.5">ที่อยู่  :</span>
+                  <span class="flex-1 break-words leading-tight" x-text="quotation.customer.address || ''"></span>
+                </div>
+
+                <!-- Row 7: Seller Name -->
+                <div class="flex items-baseline pt-1">
+                  <span class="shrink-0 mr-1.5">ชื่อ :</span>
+                  <span class="flex-1 font-normal break-words" x-text="quotation.seller.name || ''"></span>
+                </div>
+
+                <!-- Row 8: Seller Address -->
+                <div class="flex items-baseline">
+                  <span class="shrink-0 mr-1.5">ที่อยู่ :</span>
+                  <span class="flex-1 break-words leading-tight" x-text="quotation.seller.address || ''"></span>
+                </div>
+              </div>
+
+              <!-- Right Column: Doc No, Date, Job Title, Tel, Bank (Cols D-F equivalent) -->
+              <div class="col-span-5 space-y-1 text-right">
+                <!-- Row 4: Doc No -->
+                <div class="flex items-baseline justify-end">
+                  <span class="mr-3">เลขที่/ No.</span>
+                  <span class="font-bold w-36 text-center" x-text="quotation.docNo || ''"></span>
+                </div>
+
+                <!-- Row 5: Date -->
+                <div class="flex items-baseline justify-end">
+                  <span class="mr-3">วันที่ Date </span>
+                  <span class="w-36 text-center" x-text="formatDateShort(quotation.docDate) || ''"></span>
+                </div>
+
+                <!-- Row 6: Job Title -->
+                <div class="font-bold text-right pt-0.5 break-words min-h-[1.5rem]" x-text="quotation.jobTitle || ''"></div>
+
+                <!-- Row 8: Seller Phone -->
+                <div class="flex items-baseline justify-end">
+                  <span class="mr-2" x-text="quotation.seller.tel1 ? 'TEL. ' + quotation.seller.tel1 : ''"></span>
+                  <span class="w-28 text-center" x-text="quotation.seller.tel2 || ''"></span>
+                </div>
+
+                <!-- Row 9: Bank Account -->
+                <div class="text-right text-slate-800 break-words" x-text="quotation.seller.bank || ''"></div>
+              </div>
+
+            </div>
+
+            <!-- Items Table: Modeled Exactly After Original Template -->
+            <div class="mt-4">
+              <table class="w-full border-collapse border border-slate-700 text-sm" style="font-size: 14pt; line-height: 1.35;">
+                
+                <!-- Column Widths matching Excel 5.75, 54.88, 6.88, 6.75, 9.63, 10.25 (Total: 94.14) -->
+                <colgroup>
+                  <col style="width: 6.1%;">
+                  <col style="width: 58.3%;">
+                  <col style="width: 7.3%;">
+                  <col style="width: 7.2%;">
+                  <col style="width: 10.2%;">
+                  <col style="width: 10.9%;">
+                </colgroup>
+
+                <!-- Table Header: Rows 10 & 11 -->
+                <thead>
+                  <tr class="text-center font-bold">
+                    <th class="border border-slate-700 py-1 px-1 bg-white">ลำดับที่</th>
+                    <th class="border border-slate-700 py-1 px-2 bg-white">รายการ</th>
+                    <th rowspan="2" class="border border-slate-700 py-1 px-1 bg-white align-middle">หน่วย</th>
+                    <th rowspan="2" class="border border-slate-700 py-1 px-1 bg-white align-middle">จำนวน</th>
+                    <th rowspan="2" class="border border-slate-700 py-1 px-1 bg-white align-middle">ราคา/หน่วย</th>
+                    <th rowspan="2" class="border border-slate-700 py-1 px-1 bg-white align-middle">จำนวนเงิน</th>
+                  </tr>
+                  <tr class="text-center font-bold">
+                    <th class="border border-slate-700 py-0.5 px-1 bg-white">ITEM</th>
+                    <th class="border border-slate-700 py-0.5 px-2 bg-white">DESCRIPTION</th>
+                  </tr>
+                </thead>
+
+                <!-- Table Body: Rows 12 to 28 (Items + Gridlines) -->
+                <tbody>
+                  <!-- Render Quotation Items -->
+                  <template x-for="(item, idx) in quotation.items" :key="item.id || idx">
+                    <tr class="align-top">
+                      <!-- Col A: ITEM NO -->
+                      <td class="border-l border-r border-slate-700 text-center py-0.5 px-1 whitespace-nowrap" x-text="item.type === 'item' ? item.itemNo : ''"></td>
+                      
+                      <!-- Col B: DESCRIPTION -->
+                      <td class="border-l border-r border-slate-700 py-0.5 px-2 break-words" :class="{'font-medium': item.type === 'note'}">
+                        <span x-text="item.description || ''"></span>
+                      </td>
+
+                      <!-- Col C: UNIT -->
+                      <td class="border-l border-r border-slate-700 text-center py-0.5 px-1 whitespace-nowrap" x-text="item.type === 'item' ? (item.unit || '') : ''"></td>
+
+                      <!-- Col D: QTY -->
+                      <td class="border-l border-r border-slate-700 text-center py-0.5 px-1 whitespace-nowrap" x-text="item.type === 'item' ? (item.qty !== undefined && item.qty !== '' ? item.qty : '') : ''"></td>
+
+                      <!-- Col E: UNIT PRICE -->
+                      <td class="border-l border-r border-slate-700 text-right py-0.5 px-1.5 whitespace-nowrap" x-text="item.type === 'item' && item.unitPrice !== undefined && item.unitPrice !== '' ? formatCurrency(item.unitPrice) : ''"></td>
+
+                      <!-- Col F: AMOUNT -->
+                      <td class="border-l border-r border-slate-700 text-right py-0.5 px-1.5 whitespace-nowrap" x-text="item.type === 'item' && item.amount !== undefined && item.amount !== '' ? formatCurrency(item.amount) : ''"></td>
+                    </tr>
+                  </template>
+
+                  <!-- Fill remaining empty rows up to 17 rows to match original Excel layout -->
+                  <template x-for="i in Math.max(0, 16 - quotation.items.length)" :key="'empty_' + i">
+                    <tr class="h-6">
+                      <td class="border-l border-r border-slate-700"></td>
+                      <td class="border-l border-r border-slate-700"></td>
+                      <td class="border-l border-r border-slate-700"></td>
+                      <td class="border-l border-r border-slate-700"></td>
+                      <td class="border-l border-r border-slate-700"></td>
+                      <td class="border-l border-r border-slate-700"></td>
+                    </tr>
+                  </template>
+                </tbody>
+
+                <!-- Table Summary Footer: Row 29 Total Row -->
+                <tfoot>
+                  <tr class="font-bold border-t border-slate-700">
+                    <!-- Left: Thai Baht Text (Merged A29:C29) -->
+                    <td colspan="3" class="border border-slate-700 text-center py-1.5 px-2 align-middle" x-text="quotation.totalTextThai || '(ศูนย์บาทถ้วน)'"></td>
+                    
+                    <!-- Center: รวมเงิน (Merged D29:E29) -->
+                    <td colspan="2" class="border border-slate-700 text-center py-1.5 px-2 align-middle">รวมเงิน</td>
+                    
+                    <!-- Right: Total Amount (F29) -->
+                    <td class="border border-slate-700 text-right py-1.5 px-1.5 align-middle whitespace-nowrap" x-text="formatCurrency(quotation.totalAmount)"></td>
+                  </tr>
+                </tfoot>
+
+              </table>
+            </div>
+
+            <!-- Signatures Section: Rows 32 to 34 -->
+            <div class="mt-8 pt-6 grid grid-cols-12 gap-4 text-sm" style="font-size: 14pt;">
+              
+              <!-- Approver Signature Block (Left) -->
+              <div class="col-span-6 space-y-4">
+                <div class="flex items-center">
+                  <span class="w-20 shrink-0">ผู้อนุมัติ :</span>
+                  <div class="border-b border-dotted border-slate-600 flex-1 h-4"></div>
+                </div>
+                <div class="flex items-center">
+                  <span class="w-20 shrink-0">ตำแหน่ง </span>
+                  <div class="border-b border-dotted border-slate-600 flex-1 h-4"></div>
+                </div>
+                <div class="pt-2 text-center text-slate-500 tracking-wider">
+                  (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
+                </div>
+              </div>
+
+              <!-- Seller Signature Block (Right) -->
+              <div class="col-span-6 space-y-3 text-right">
+                <div class="flex items-baseline justify-end">
+                  <span class="mr-3">ผู้เสนอ :</span>
+                  <div class="w-56 text-center border-b border-dotted border-slate-600 pb-0.5">
+                    <span class="font-bold" x-text="quotation.seller.name || ''"></span>
+                  </div>
+                </div>
+                <div class="flex items-baseline justify-end pt-1">
+                  <div class="w-56 text-center text-slate-800">
+                    <span x-text="formatDateLong(quotation.docDate) || ''"></span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- MODALS                                                                -->
+  <!-- ===================================================================== -->
+
+  <!-- 1. History Modal -->
+  <div
+    x-show="showHistoryModal"
+    x-cloak
+    class="fixed inset-0 z-50 overflow-y-auto no-print"
+    aria-labelledby="history-modal-title"
+    role="dialog"
+    aria-modal="true"
+  >
+    <!-- Backdrop Overlay -->
+    <div
+      x-show="showHistoryModal"
+      x-transition:enter="ease-out duration-300"
+      x-transition:enter-start="opacity-0"
+      x-transition:enter-end="opacity-100"
+      x-transition:leave="ease-in duration-200"
+      x-transition:leave-start="opacity-100"
+      x-transition:leave-end="opacity-0"
+      class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
+      @click="showHistoryModal = false"
+    ></div>
+
+    <div class="flex min-h-full items-center justify-center p-4 text-center">
+      <div
+        x-show="showHistoryModal"
+        x-transition:enter="ease-out duration-300"
+        x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+        x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+        x-transition:leave="ease-in duration-200"
+        x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+        x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+        class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-4xl p-6"
+      >
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between pb-4 border-b border-slate-200">
+          <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-base font-semibold text-slate-900 font-heading" id="history-modal-title">ประวัติใบเสนอราคาที่บันทึกไว้</h3>
+              <p class="text-xs text-slate-500">จัดการ ค้นหา นำกลับมาแก้ไข หรือทำสำเนาใบเสนอราคา</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            @click="showHistoryModal = false"
+            class="text-slate-400 hover:text-slate-600 transition p-1.5 rounded-lg hover:bg-slate-100"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Search Input -->
+        <div class="py-4">
+          <div class="relative">
+            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+              <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </div>
+            <input
+              type="text"
+              x-model="historySearch"
+              placeholder="ค้นหาด้วยเลขที่เอกสาร, ชื่อลูกค้า หรือ ชื่องาน..."
+              class="w-full pl-9 pr-4 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+        </div>
+
+        <!-- History Items Table / List -->
+        <div class="max-h-96 overflow-y-auto border border-slate-200 rounded-xl divide-y divide-slate-100">
+          
+          <!-- Empty State -->
+          <template x-if="filteredHistory().length === 0">
+            <div class="p-8 text-center text-slate-400">
+              <svg class="w-12 h-12 mx-auto mb-2 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              <p class="text-sm font-medium">ไม่พบประวัติใบเสนอราคา</p>
+              <p class="text-xs text-slate-400 mt-1">กดบันทึกเอกสารที่หน้าหลักเพื่อเก็บประวัติไว้ที่นี่</p>
+            </div>
+          </template>
+
+          <!-- History Rows -->
+          <template x-for="item in filteredHistory()" :key="item.id">
+            <div class="p-4 hover:bg-slate-50 transition flex items-center justify-between gap-4">
+              <div class="space-y-1 min-w-0 flex-1">
+                <div class="flex items-center space-x-2">
+                  <span class="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200" x-text="item.docNo"></span>
+                  <span class="text-xs text-slate-500" x-text="formatDateShort(item.docDate)"></span>
+                </div>
+                <h4 class="text-sm font-semibold text-slate-900 truncate" x-text="item.customer?.name || '(ไม่ระบุชื่อลูกค้า)'"></h4>
+                <p class="text-xs text-slate-500 truncate" x-text="item.jobTitle || '(ไม่ระบุชื่องาน)'"></p>
+              </div>
+
+              <!-- Price & Action Buttons -->
+              <div class="flex items-center space-x-3 shrink-0">
+                <div class="text-right pr-2">
+                  <div class="text-sm font-bold text-slate-900" x-text="formatCurrency(item.totalAmount) + ' ฿'"></div>
+                  <div class="text-[11px] text-slate-400" x-text="(item.items?.filter(i => i.type === 'item')?.length || 0) + ' รายการ'"></div>
+                </div>
+
+                <!-- Load/Edit -->
+                <button
+                  type="button"
+                  @click="loadFromHistory(item)"
+                  class="inline-flex items-center px-2.5 py-1.5 text-xs font-medium rounded-lg text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 transition"
+                  title="เปิดเอกสารนี้มาแก้ไข"
+                >
+                  เปิด
+                </button>
+
+                <!-- Duplicate -->
+                <button
+                  type="button"
+                  @click="duplicateFromHistory(item.id)"
+                  class="inline-flex items-center px-2.5 py-1.5 text-xs font-medium rounded-lg text-slate-700 bg-slate-100 hover:bg-slate-200 transition"
+                  title="ทำสำเนาเป็นเอกสารใหม่พร้อมเลขที่ใหม่"
+                >
+                  คัดลอก
+                </button>
+
+                <!-- Delete -->
+                <button
+                  type="button"
+                  @click="deleteFromHistory(item.id)"
+                  class="inline-flex items-center p-1.5 text-xs font-medium rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition"
+                  title="ลบเอกสารนี้"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </template>
+
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="mt-5 flex justify-end">
+          <button
+            type="button"
+            @click="showHistoryModal = false"
+            class="px-4 py-2 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition"
+          >
+            ปิดหน้าต่าง
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Seller Profile Settings Modal -->
+  <div
+    x-show="showSellerModal"
+    x-cloak
+    class="fixed inset-0 z-50 overflow-y-auto no-print"
+    aria-labelledby="seller-modal-title"
+    role="dialog"
+    aria-modal="true"
+  >
+    <!-- Backdrop Overlay -->
+    <div
+      x-show="showSellerModal"
+      x-transition:enter="ease-out duration-300"
+      x-transition:enter-start="opacity-0"
+      x-transition:enter-end="opacity-100"
+      x-transition:leave="ease-in duration-200"
+      x-transition:leave-start="opacity-100"
+      x-transition:leave-end="opacity-0"
+      class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
+      @click="showSellerModal = false"
+    ></div>
+
+    <div class="flex min-h-full items-center justify-center p-4 text-center">
+      <div
+        x-show="showSellerModal"
+        x-transition:enter="ease-out duration-300"
+        x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+        x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+        x-transition:leave="ease-in duration-200"
+        x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+        x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+        class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg p-6 space-y-4"
+      >
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+          <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-base font-semibold text-slate-900 font-heading" id="seller-modal-title">ตั้งค่าข้อมูลผู้เสนอราคา</h3>
+              <p class="text-xs text-slate-500">ข้อมูลนี้จะถูกบันทึกในเบราว์เซอร์เพื่อใช้เป็นค่าเริ่มต้นสำหรับเอกสารใหม่</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            @click="showSellerModal = false"
+            class="text-slate-400 hover:text-slate-600 transition p-1.5 rounded-lg hover:bg-slate-100"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Form Fields -->
+        <div class="space-y-3 text-sm">
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">ชื่อผู้เสนอราคา / ร้านค้า / บริษัท</label>
+            <input
+              type="text"
+              x-model="sellerProfileForm.name"
+              placeholder="เช่น นายสมชาย ใจดี หรือ ร้าน กิตติการช่าง"
+              class="w-full text-sm px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">ที่อยู่ผู้เสนอราคา</label>
+            <textarea
+              x-model="sellerProfileForm.address"
+              rows="2"
+              placeholder="เช่น 88/99 ถ.สุขใจ ต.สุขใจ อ.เมือง จ.ปทุมธานี 12150"
+              class="w-full text-sm px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-none"
+            ></textarea>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-medium text-slate-700 mb-1">เบอร์โทรศัพท์ 1</label>
+              <input
+                type="text"
+                x-model="sellerProfileForm.tel1"
+                placeholder="08X-XXX-XXXX"
+                class="w-full text-sm px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-700 mb-1">เบอร์โทรศัพท์ 2</label>
+              <input
+                type="text"
+                x-model="sellerProfileForm.tel2"
+                placeholder="08Y-YYY-YYYY"
+                class="w-full text-sm px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">ข้อมูลบัญชีธนาคาร (Bank Account)</label>
+            <input
+              type="text"
+              x-model="sellerProfileForm.bank"
+              placeholder="เช่น ธ.กรุงเทพ XXX-X-XXXXX-X สาขา..."
+              class="w-full text-sm px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            />
+          </div>
+        </div>
+
+        <!-- Modal Footer Actions -->
+        <div class="pt-3 border-t border-slate-200 flex items-center justify-end space-x-2">
+          <button
+            type="button"
+            @click="showSellerModal = false"
+            class="px-4 py-2 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition"
+          >
+            ยกเลิก
+          </button>
+          <button
+            type="button"
+            @click="saveSellerSettings()"
+            class="px-4 py-2 text-xs font-medium text-white bg-emerald-600 hover:bg-emerald-500 rounded-lg shadow-sm transition active:scale-95"
+          >
+            บันทึกข้อมูล
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
