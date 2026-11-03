@@ -19,15 +19,38 @@
       throw new Error('html2canvas library is not loaded');
     }
 
-    const origTransform = (el.style && el.style.transform) || '';
-    const origPosition = (el.style && el.style.position) || '';
-    if (el.style) {
-      el.style.transform = 'none';
-      el.style.position = 'relative';
-    }
+    // Save original styles of element and parents to avoid any clipping during capture
+    const parentScaler = el.parentElement;
+    const outerContainer = parentScaler ? parentScaler.parentElement : null;
+
+    const origElTransform = el.style ? el.style.transform : '';
+    const origElPosition = el.style ? el.style.position : '';
+    const origParentWidth = parentScaler && parentScaler.style ? parentScaler.style.width : '';
+    const origParentHeight = parentScaler && parentScaler.style ? parentScaler.style.height : '';
+    const origParentOverflow = parentScaler && parentScaler.style ? parentScaler.style.overflow : '';
+    const origOuterOverflow = outerContainer && outerContainer.style ? outerContainer.style.overflow : '';
 
     let canvas;
     try {
+      // Temporarily expand to natural 794px x 1123px A4 size without clipping
+      if (el.style) {
+        el.style.transform = 'none';
+        el.style.position = 'relative';
+      }
+      if (parentScaler && parentScaler.style) {
+        parentScaler.style.width = '794px';
+        parentScaler.style.height = '1123px';
+        parentScaler.style.overflow = 'visible';
+      }
+      if (outerContainer && outerContainer.style) {
+        outerContainer.style.overflow = 'visible';
+      }
+
+      // Ensure all web fonts are fully ready before capture
+      if (doc.fonts && doc.fonts.ready) {
+        await doc.fonts.ready;
+      }
+
       canvas = await h2c(el, {
         scale: 2,
         useCORS: true,
@@ -35,9 +58,18 @@
         logging: false
       });
     } finally {
+      // Restore all original styles
       if (el.style) {
-        el.style.transform = origTransform;
-        el.style.position = origPosition;
+        el.style.transform = origElTransform;
+        el.style.position = origElPosition;
+      }
+      if (parentScaler && parentScaler.style) {
+        parentScaler.style.width = origParentWidth;
+        parentScaler.style.height = origParentHeight;
+        parentScaler.style.overflow = origParentOverflow;
+      }
+      if (outerContainer && outerContainer.style) {
+        outerContainer.style.overflow = origOuterOverflow;
       }
     }
 
@@ -69,15 +101,39 @@
     }
 
     const jsPDFClass = jspdfLib.jsPDF || jspdfLib;
-    const origTransform = (el.style && el.style.transform) || '';
-    const origPosition = (el.style && el.style.position) || '';
-    if (el.style) {
-      el.style.transform = 'none';
-      el.style.position = 'relative';
-    }
+
+    // Save original styles of element and parents to avoid any clipping during capture
+    const parentScaler = el.parentElement;
+    const outerContainer = parentScaler ? parentScaler.parentElement : null;
+
+    const origElTransform = el.style ? el.style.transform : '';
+    const origElPosition = el.style ? el.style.position : '';
+    const origParentWidth = parentScaler && parentScaler.style ? parentScaler.style.width : '';
+    const origParentHeight = parentScaler && parentScaler.style ? parentScaler.style.height : '';
+    const origParentOverflow = parentScaler && parentScaler.style ? parentScaler.style.overflow : '';
+    const origOuterOverflow = outerContainer && outerContainer.style ? outerContainer.style.overflow : '';
 
     let canvas;
     try {
+      // Temporarily expand to natural 794px x 1123px A4 size without clipping
+      if (el.style) {
+        el.style.transform = 'none';
+        el.style.position = 'relative';
+      }
+      if (parentScaler && parentScaler.style) {
+        parentScaler.style.width = '794px';
+        parentScaler.style.height = '1123px';
+        parentScaler.style.overflow = 'visible';
+      }
+      if (outerContainer && outerContainer.style) {
+        outerContainer.style.overflow = 'visible';
+      }
+
+      // Ensure all web fonts are fully ready before capture
+      if (doc.fonts && doc.fonts.ready) {
+        await doc.fonts.ready;
+      }
+
       canvas = await h2c(el, {
         scale: 2,
         useCORS: true,
@@ -85,9 +141,18 @@
         logging: false
       });
     } finally {
+      // Restore all original styles
       if (el.style) {
-        el.style.transform = origTransform;
-        el.style.position = origPosition;
+        el.style.transform = origElTransform;
+        el.style.position = origElPosition;
+      }
+      if (parentScaler && parentScaler.style) {
+        parentScaler.style.width = origParentWidth;
+        parentScaler.style.height = origParentHeight;
+        parentScaler.style.overflow = origParentOverflow;
+      }
+      if (outerContainer && outerContainer.style) {
+        outerContainer.style.overflow = origOuterOverflow;
       }
     }
 

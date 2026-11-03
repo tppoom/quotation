@@ -49,11 +49,16 @@
     .a4-page {
       width: 794px; /* Standard A4 width at 96 DPI (210mm) */
       min-height: 1123px; /* Standard A4 height at 96 DPI (297mm) */
-      padding: 38px 45px; /* ~10-12mm padding */
+      padding: 36px 42px; /* ~10-12mm padding */
       margin: 0 auto;
       background: #ffffff;
       box-sizing: border-box;
       position: relative;
+      font-family: 'Sarabun', 'Leelawadee UI', 'Tahoma', sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.45;
+      color: #1e293b;
+      -webkit-font-smoothing: antialiased;
     }
 
     /* Print Stylesheet for Pristine 1-Page A4 Printing */
@@ -942,76 +947,76 @@
             <!-- Exact A4 Document Container -->
             <div
               id="quotation-preview"
-              class="a4-page shadow-2xl rounded-sm text-slate-900 leading-normal select-text origin-top-left absolute top-0 left-0 transition-transform duration-200"
+              class="a4-page shadow-2xl rounded-sm text-slate-900 select-text origin-top-left absolute top-0 left-0 transition-transform duration-200"
               :style="{
                 transform: 'scale(' + computedScale + ')'
               }"
             >
               <!-- Row 1: Header ใบเสนอราคา -->
-              <div class="text-center pt-2">
-                <h1 class="text-3xl font-bold tracking-wide" style="font-size: 22pt;">ใบเสนอราคา</h1>
+              <div class="text-center pt-1">
+                <h1 class="font-bold tracking-wide text-slate-900 font-heading" style="font-size: 20pt; line-height: 1.2;">ใบเสนอราคา</h1>
               </div>
 
               <!-- Row 2: Header QUOTATION -->
               <div class="text-center pb-2">
-                <h2 class="text-xl font-bold tracking-widest text-slate-700" style="font-size: 14pt;">QUOTATION</h2>
+                <h2 class="font-bold tracking-[0.16em] text-slate-600 font-heading" style="font-size: 11pt; line-height: 1.2;">QUOTATION</h2>
               </div>
 
               <!-- Row 4 to 9: Header Meta Information -->
-              <div class="grid grid-cols-12 gap-x-2 mt-4 text-sm" style="font-size: 14pt; line-height: 1.45;">
+              <div class="flex justify-between gap-x-4 mt-3 text-slate-800" style="font-size: 10.5pt; line-height: 1.55;">
                 
                 <!-- Left Column (Customer Details & Seller Name/Address) -->
-                <div class="col-span-7 space-y-1">
+                <div class="w-[62%] space-y-1">
                   <!-- Row 4: Attention Customer Name -->
-                  <div class="font-bold flex">
-                    <span class="shrink-0">เรียน/Attention :&nbsp;</span>
-                    <span x-text="quotation.customer?.name || ''" class="break-words"></span>
+                  <div class="flex">
+                    <span class="font-bold shrink-0">เรียน/Attention :&nbsp;</span>
+                    <span x-text="quotation.customer?.name || ''" class="break-words font-medium"></span>
                   </div>
 
                   <!-- Row 5: Customer Address -->
                   <div class="flex">
-                    <span class="shrink-0">ที่อยู่  :&nbsp;</span>
+                    <span class="shrink-0 text-slate-700">ที่อยู่  :&nbsp;</span>
                     <span x-text="quotation.customer?.address || ''" class="break-words"></span>
                   </div>
 
                   <!-- Row 7: Seller Name -->
                   <div class="pt-2 flex">
-                    <span class="shrink-0">ชื่อ :&nbsp;</span>
-                    <span x-text="quotation.seller?.name || ''"></span>
+                    <span class="shrink-0 font-medium">ชื่อ :&nbsp;</span>
+                    <span x-text="quotation.seller?.name || ''" class="font-bold text-slate-900"></span>
                   </div>
 
                   <!-- Row 8: Seller Address -->
                   <div class="flex">
-                    <span class="shrink-0">ที่อยู่ :&nbsp;</span>
+                    <span class="shrink-0 text-slate-700">ที่อยู่ :&nbsp;</span>
                     <span x-text="quotation.seller?.address || ''" class="break-words"></span>
                   </div>
                 </div>
 
                 <!-- Right Column (Doc No, Date, Job Title, Tel, Bank) -->
-                <div class="col-span-5 space-y-1 text-right">
+                <div class="w-[38%] space-y-1 text-right shrink-0">
                   <!-- Row 4: Quotation Number -->
-                  <div class="flex justify-between">
-                    <span class="font-normal text-slate-600">เลขที่/ No.</span>
-                    <span class="font-bold text-slate-900 font-mono" x-text="quotation.docNo || ''"></span>
+                  <div class="flex justify-between items-baseline">
+                    <span class="text-slate-600">เลขที่/ No.</span>
+                    <span class="font-bold text-slate-900 text-[11pt]" style="font-variant-numeric: tabular-nums;" x-text="quotation.docNo || ''"></span>
                   </div>
 
                   <!-- Row 5: Quotation Date -->
-                  <div class="flex justify-between">
-                    <span class="font-normal text-slate-600">วันที่ Date</span>
-                    <span x-text="formatDateShort(quotation.docDate)"></span>
+                  <div class="flex justify-between items-baseline">
+                    <span class="text-slate-600">วันที่ Date</span>
+                    <span class="font-medium text-slate-900" x-text="formatDateShort(quotation.docDate)"></span>
                   </div>
 
                   <!-- Row 6: Job Title -->
-                  <div class="pt-1 font-bold text-slate-900 text-right truncate" x-text="quotation.jobTitle || ''"></div>
+                  <div class="pt-0.5 font-bold text-slate-900 text-right leading-snug" x-text="quotation.jobTitle || ''"></div>
 
                   <!-- Row 8: Seller Phone -->
-                  <div class="pt-2 flex justify-end space-x-2">
+                  <div class="pt-1.5 flex justify-end space-x-2 text-slate-800">
                     <span x-text="quotation.seller?.tel1 ? 'TEL. ' + quotation.seller.tel1 : ''"></span>
                     <span x-text="quotation.seller?.tel2 || ''"></span>
                   </div>
 
                   <!-- Row 9: Bank Account Info -->
-                  <div class="text-slate-800 text-right" x-text="quotation.seller?.bank || ''"></div>
+                  <div class="text-slate-800 text-right font-medium" x-text="quotation.seller?.bank || ''"></div>
                 </div>
 
               </div>
@@ -1019,48 +1024,48 @@
               <!-- ================================================================= -->
               <!-- TABLE: Exact 6 Columns matching reference Excel template          -->
               <!-- ================================================================= -->
-              <div class="mt-4">
-                <table class="w-full border-collapse text-sm" style="font-size: 14pt;">
-                  <!-- Column Widths Proportions matching 5.75, 54.88, 6.88, 6.75, 9.63, 10.25 -->
+              <div class="mt-3.5">
+                <table class="w-full border-collapse" style="table-layout: fixed;">
+                  <!-- Column Widths Proportions: 6.5%, 53.5%, 7.5%, 7.5%, 12.5%, 12.5% -->
                   <colgroup>
-                    <col style="width: 6.1%;" />   <!-- Col A: ลำดับที่ / ITEM -->
-                    <col style="width: 58.3%;" />  <!-- Col B: รายการ / DESCRIPTION -->
-                    <col style="width: 7.3%;" />   <!-- Col C: หน่วย -->
-                    <col style="width: 7.2%;" />   <!-- Col D: จำนวน -->
-                    <col style="width: 10.2%;" />  <!-- Col E: ราคา/หน่วย -->
-                    <col style="width: 10.9%;" />  <!-- Col F: จำนวนเงิน -->
+                    <col style="width: 6.5%;" />   <!-- Col A: ลำดับที่ / ITEM -->
+                    <col style="width: 53.5%;" />  <!-- Col B: รายการ / DESCRIPTION -->
+                    <col style="width: 7.5%;" />   <!-- Col C: หน่วย -->
+                    <col style="width: 7.5%;" />   <!-- Col D: จำนวน -->
+                    <col style="width: 12.5%;" />  <!-- Col E: ราคา/หน่วย -->
+                    <col style="width: 12.5%;" />  <!-- Col F: จำนวนเงิน -->
                   </colgroup>
 
                   <!-- Row 10 & 11: Two-Tier Header -->
                   <thead>
-                    <tr class="border-t border-b-0 border-slate-700 font-bold text-center">
-                      <th class="border-l border-r border-slate-700 py-0.5 px-1 font-bold">ลำดับที่</th>
-                      <th class="border-l border-r border-slate-700 py-0.5 px-2 font-bold text-center">รายการ</th>
-                      <th rowspan="2" class="border-l border-r border-b border-slate-700 py-0.5 px-1 font-bold align-middle">หน่วย</th>
-                      <th rowspan="2" class="border-l border-r border-b border-slate-700 py-0.5 px-1 font-bold align-middle">จำนวน</th>
-                      <th rowspan="2" class="border-l border-r border-b border-slate-700 py-0.5 px-1 font-bold align-middle">ราคา/หน่วย</th>
-                      <th rowspan="2" class="border-l border-r border-b border-slate-700 py-0.5 px-1 font-bold align-middle">จำนวนเงิน</th>
+                    <tr class="border-t border-slate-700 font-bold text-center">
+                      <th class="border-l border-r border-slate-700 pt-1.5 pb-0 px-1 font-bold text-center align-bottom" style="font-size: 9.5pt; line-height: 1.2;">ลำดับที่</th>
+                      <th class="border-l border-r border-slate-700 pt-1.5 pb-0 px-2 font-bold text-center align-bottom" style="font-size: 10pt; line-height: 1.2;">รายการ</th>
+                      <th rowspan="2" class="border-l border-r border-b border-slate-700 py-1 px-1 font-bold text-center align-middle" style="font-size: 10pt;">หน่วย</th>
+                      <th rowspan="2" class="border-l border-r border-b border-slate-700 py-1 px-1 font-bold text-center align-middle" style="font-size: 10pt;">จำนวน</th>
+                      <th rowspan="2" class="border-l border-r border-b border-slate-700 py-1 px-1 font-bold text-center align-middle" style="font-size: 9.5pt; line-height: 1.2;">ราคา/หน่วย</th>
+                      <th rowspan="2" class="border-l border-r border-b border-slate-700 py-1 px-1 font-bold text-center align-middle" style="font-size: 10pt;">จำนวนเงิน</th>
                     </tr>
                     <tr class="border-b border-slate-700 text-center font-bold">
-                      <th class="border-l border-r border-slate-700 py-0.5 px-1 text-xs">ITEM</th>
-                      <th class="border-l border-r border-slate-700 py-0.5 px-2 text-xs text-center">DESCRIPTION</th>
+                      <th class="border-l border-r border-b border-slate-700 pt-0 pb-1.5 px-1 text-center font-bold tracking-wider" style="font-size: 8pt; line-height: 1.2;">ITEM</th>
+                      <th class="border-l border-r border-b border-slate-700 pt-0 pb-1.5 px-2 text-center font-bold tracking-wider" style="font-size: 8pt; line-height: 1.2;">DESCRIPTION</th>
                     </tr>
                   </thead>
 
                   <!-- Table Body: Data Rows 12 to 28 -->
-                  <tbody class="align-top">
+                  <tbody class="align-top" style="font-size: 10pt; line-height: 1.45;">
                     <template x-for="(item, idx) in quotation.items" :key="'preview_' + (item.id || idx)">
-                      <tr class="h-6">
+                      <tr style="height: 25px;">
                         <!-- Col A: ITEM NO -->
                         <td class="border-l border-r border-slate-700 text-center py-0.5 px-1 whitespace-nowrap" x-text="item.type === 'item' ? item.itemNo : ''"></td>
 
                         <!-- Col B: DESCRIPTION -->
                         <td
-                          class="border-l border-r border-slate-700 py-0.5 px-2"
+                          class="border-l border-r border-slate-700 py-0.5 px-2.5 break-words"
                           :class="{
-                            'font-bold': item.type === 'note' || (item.type === 'item' && item.itemNo === '1'),
-                            'pl-5 text-slate-800': item.type === 'bullet',
-                            'font-semibold text-amber-950 pt-2': item.type === 'note'
+                            'font-bold text-slate-900': item.type === 'item' && item.itemNo === '1',
+                            'pl-6 text-slate-800': item.type === 'bullet',
+                            'font-semibold text-amber-950 pt-1.5': item.type === 'note'
                           }"
                           x-text="item.description || ''"
                         ></td>
@@ -1072,16 +1077,16 @@
                         <td class="border-l border-r border-slate-700 text-center py-0.5 px-1 whitespace-nowrap" x-text="item.type === 'item' ? (item.qty !== undefined && item.qty !== '' ? item.qty : '') : ''"></td>
 
                         <!-- Col E: UNIT PRICE -->
-                        <td class="border-l border-r border-slate-700 text-right py-0.5 px-1.5 whitespace-nowrap" x-text="item.type === 'item' && item.unitPrice !== undefined && item.unitPrice !== '' ? formatCurrency(item.unitPrice) : ''"></td>
+                        <td class="border-l border-r border-slate-700 text-right py-0.5 pr-2.5 pl-1 whitespace-nowrap" style="font-variant-numeric: tabular-nums;" x-text="item.type === 'item' && item.unitPrice !== undefined && item.unitPrice !== '' ? formatCurrency(item.unitPrice) : ''"></td>
 
                         <!-- Col F: AMOUNT -->
-                        <td class="border-l border-r border-slate-700 text-right py-0.5 px-1.5 whitespace-nowrap" x-text="item.type === 'item' && item.amount !== undefined && item.amount !== '' ? formatCurrency(item.amount) : ''"></td>
+                        <td class="border-l border-r border-slate-700 text-right py-0.5 pr-2.5 pl-1 whitespace-nowrap" style="font-variant-numeric: tabular-nums;" x-text="item.type === 'item' && item.amount !== undefined && item.amount !== '' ? formatCurrency(item.amount) : ''"></td>
                       </tr>
                     </template>
 
                     <!-- Fill remaining empty rows up to 17 rows to match original Excel layout -->
                     <template x-for="i in Math.max(0, 17 - quotation.items.length)" :key="'empty_' + i">
-                      <tr class="h-6">
+                      <tr style="height: 25px;">
                         <td class="border-l border-r border-slate-700"></td>
                         <td class="border-l border-r border-slate-700"></td>
                         <td class="border-l border-r border-slate-700"></td>
@@ -1093,16 +1098,16 @@
                   </tbody>
 
                   <!-- Row 29: Total Amount & Thai Baht Text -->
-                  <tfoot>
-                    <tr class="border-t border-b border-slate-700 font-bold">
+                  <tfoot style="font-size: 10.5pt;">
+                    <tr class="border-t border-b border-slate-700 font-bold" style="height: 28px;">
                       <!-- Col A to C Merged: Thai Baht Text -->
-                      <td colspan="3" class="border-l border-r border-slate-700 py-1 px-3 text-center align-middle font-bold" x-text="quotation.totalTextThai"></td>
+                      <td colspan="3" class="border-l border-r border-slate-700 py-1 px-3 text-center align-middle font-bold text-slate-900" x-text="quotation.totalTextThai"></td>
 
                       <!-- Col D to E Merged: รวมเงิน Label -->
-                      <td colspan="2" class="border-l border-r border-slate-700 py-1 px-2 text-center align-middle font-bold">รวมเงิน</td>
+                      <td colspan="2" class="border-l border-r border-slate-700 py-1 px-2 text-center align-middle font-bold text-slate-900">รวมเงิน</td>
 
                       <!-- Col F: Total Amount -->
-                      <td class="border-l border-r border-slate-700 py-1 px-2 text-right align-middle font-bold font-mono text-base" x-text="formatCurrency(quotation.totalAmount)"></td>
+                      <td class="border-l border-r border-slate-700 py-1 pr-2.5 pl-1 text-right align-middle font-bold text-slate-900 text-[11pt]" style="font-variant-numeric: tabular-nums;" x-text="formatCurrency(quotation.totalAmount)"></td>
                     </tr>
                   </tfoot>
                 </table>
@@ -1111,32 +1116,30 @@
               <!-- ================================================================= -->
               <!-- FOOTER SIGNATURES: Matching Row 32 to 34                          -->
               <!-- ================================================================= -->
-              <div class="mt-8 pt-6 grid grid-cols-12 gap-4 text-sm" style="font-size: 14pt;">
+              <div class="mt-8 pt-4 grid grid-cols-2 gap-8 text-slate-800" style="font-size: 10pt; line-height: 1.6;">
                 
                 <!-- Left: Approver (Customer) -->
-                <div class="col-span-6 space-y-3">
-                  <div class="flex items-center space-x-2">
-                    <span class="font-normal">ผู้อนุมัติ :</span>
-                    <span class="border-b border-dotted border-slate-400 flex-1 h-5"></span>
+                <div class="space-y-3">
+                  <div class="flex items-end">
+                    <span class="font-medium shrink-0">ผู้อนุมัติ :</span>
+                    <span class="border-b border-dotted border-slate-500 flex-1 ml-2 mb-1"></span>
                   </div>
-                  <div class="flex items-center space-x-2">
-                    <span class="font-normal">ตำแหน่ง</span>
-                    <span class="border-b border-dotted border-slate-400 flex-1 h-5"></span>
+                  <div class="flex items-end">
+                    <span class="font-medium shrink-0">ตำแหน่ง :</span>
+                    <span class="border-b border-dotted border-slate-500 flex-1 ml-2 mb-1"></span>
                   </div>
-                  <div class="pt-4 text-center text-slate-600">
-                    ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )
+                  <div class="pt-3 text-center text-slate-600">
+                    (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
                   </div>
                 </div>
 
                 <!-- Right: Seller (Contractor) -->
-                <div class="col-span-6 space-y-3 text-center">
-                  <div class="flex items-center justify-end space-x-2">
-                    <span class="font-normal text-slate-700">ผู้เสนอ :</span>
-                    <span class="font-bold text-slate-900 min-w-[200px] border-b border-slate-300 pb-0.5 text-center" x-text="quotation.seller?.name || ''"></span>
+                <div class="space-y-2 text-center flex flex-col items-center justify-start">
+                  <div class="w-full flex items-baseline justify-center gap-1.5">
+                    <span class="font-medium shrink-0">ผู้เสนอ :</span>
+                    <div class="border-b border-slate-400 pb-1.5 px-3 min-w-[200px] text-center font-bold text-slate-900 inline-block" x-text="quotation.seller?.name || ''"></div>
                   </div>
-                  <div class="flex items-center justify-end space-x-2 pt-2">
-                    <span class="text-slate-700 min-w-[200px] text-center" x-text="formatDateLong(quotation.docDate)"></span>
-                  </div>
+                  <div class="w-full text-center text-slate-700 pt-2" x-text="formatDateLong(quotation.docDate)"></div>
                 </div>
 
               </div>
