@@ -63,6 +63,8 @@
 
     #quotation-preview table tbody td {
       vertical-align: middle;
+      padding-top: 2px;
+      padding-bottom: 4px;
     }
 
     /* Print Stylesheet for Pristine 1-Page A4 Printing */
@@ -1059,13 +1061,13 @@
                   <!-- Table Body: Data Rows 12 to 28 -->
                   <tbody class="align-middle" style="font-size: 10pt; line-height: 1.45;">
                     <template x-for="(item, idx) in quotation.items" :key="'preview_' + (item.id || idx)">
-                      <tr style="height: 25px;">
+                      <tr style="height: 28px;">
                         <!-- Col A: ITEM NO -->
-                        <td class="border-l border-r border-slate-700 text-center py-0.5 px-1 whitespace-nowrap align-middle" x-text="item.type === 'item' ? item.itemNo : ''"></td>
+                        <td class="border-l border-r border-slate-700 text-center px-1 whitespace-nowrap align-middle" x-text="item.type === 'item' ? item.itemNo : ''"></td>
 
                         <!-- Col B: DESCRIPTION -->
                         <td
-                          class="border-l border-r border-slate-700 py-0.5 px-2.5 break-words align-middle"
+                          class="border-l border-r border-slate-700 px-2.5 break-words align-middle"
                           :class="{
                             'font-bold text-slate-900': item.type === 'item' && item.itemNo === '1',
                             'pl-6 text-slate-800': item.type === 'bullet',
@@ -1075,43 +1077,43 @@
                         ></td>
 
                         <!-- Col C: UNIT -->
-                        <td class="border-l border-r border-slate-700 text-center py-0.5 px-1 whitespace-nowrap align-middle" x-text="item.type === 'item' ? (item.unit || '') : ''"></td>
+                        <td class="border-l border-r border-slate-700 text-center px-1 whitespace-nowrap align-middle" x-text="item.type === 'item' ? (item.unit || '') : ''"></td>
 
                         <!-- Col D: QTY -->
-                        <td class="border-l border-r border-slate-700 text-center py-0.5 px-1 whitespace-nowrap align-middle" x-text="item.type === 'item' ? (item.qty !== undefined && item.qty !== '' ? item.qty : '') : ''"></td>
+                        <td class="border-l border-r border-slate-700 text-center px-1 whitespace-nowrap align-middle" x-text="item.type === 'item' ? (item.qty !== undefined && item.qty !== '' ? item.qty : '') : ''"></td>
 
                         <!-- Col E: UNIT PRICE -->
-                        <td class="border-l border-r border-slate-700 text-right py-0.5 pr-2.5 pl-1 whitespace-nowrap align-middle" style="font-variant-numeric: tabular-nums;" x-text="item.type === 'item' && item.unitPrice !== undefined && item.unitPrice !== '' ? formatCurrency(item.unitPrice) : ''"></td>
+                        <td class="border-l border-r border-slate-700 text-right pr-2.5 pl-1 whitespace-nowrap align-middle" style="font-variant-numeric: tabular-nums;" x-text="item.type === 'item' && item.unitPrice !== undefined && item.unitPrice !== '' ? formatCurrency(item.unitPrice) : ''"></td>
 
                         <!-- Col F: AMOUNT -->
-                        <td class="border-l border-r border-slate-700 text-right py-0.5 pr-2.5 pl-1 whitespace-nowrap align-middle" style="font-variant-numeric: tabular-nums;" x-text="item.type === 'item' && item.amount !== undefined && item.amount !== '' ? formatCurrency(item.amount) : ''"></td>
+                        <td class="border-l border-r border-slate-700 text-right pr-2.5 pl-1 whitespace-nowrap align-middle" style="font-variant-numeric: tabular-nums;" x-text="item.type === 'item' && item.amount !== undefined && item.amount !== '' ? formatCurrency(item.amount) : ''"></td>
                       </tr>
                     </template>
 
                     <!-- Fill remaining empty rows up to 17 rows to match original Excel layout -->
                     <template x-for="i in Math.max(0, 17 - quotation.items.length)" :key="'empty_' + i">
-                      <tr style="height: 25px;">
-                        <td class="border-l border-r border-slate-700 align-middle"></td>
-                        <td class="border-l border-r border-slate-700 align-middle"></td>
-                        <td class="border-l border-r border-slate-700 align-middle"></td>
-                        <td class="border-l border-r border-slate-700 align-middle"></td>
-                        <td class="border-l border-r border-slate-700 align-middle"></td>
-                        <td class="border-l border-r border-slate-700 align-middle"></td>
+                      <tr style="height: 28px;">
+                        <td class="border-l border-r border-slate-700 align-middle">&nbsp;</td>
+                        <td class="border-l border-r border-slate-700 align-middle">&nbsp;</td>
+                        <td class="border-l border-r border-slate-700 align-middle">&nbsp;</td>
+                        <td class="border-l border-r border-slate-700 align-middle">&nbsp;</td>
+                        <td class="border-l border-r border-slate-700 align-middle">&nbsp;</td>
+                        <td class="border-l border-r border-slate-700 align-middle">&nbsp;</td>
                       </tr>
                     </template>
                   </tbody>
 
                   <!-- Row 29: Total Amount & Thai Baht Text -->
                   <tfoot style="font-size: 10.5pt;">
-                    <tr class="border-t border-b border-slate-700 font-bold" style="height: 28px;">
+                    <tr class="border-t border-b border-slate-700 font-bold" style="height: 30px;">
                       <!-- Col A to C Merged: Thai Baht Text -->
-                      <td colspan="3" class="border-l border-r border-slate-700 py-1 px-3 text-center align-middle font-bold text-slate-900" x-text="quotation.totalTextThai"></td>
+                      <td colspan="3" class="border-l border-r border-slate-700 pt-1 pb-1.5 px-3 text-center align-middle font-bold text-slate-900" x-text="quotation.totalTextThai"></td>
 
                       <!-- Col D to E Merged: รวมเงิน Label -->
-                      <td colspan="2" class="border-l border-r border-slate-700 py-1 px-2 text-center align-middle font-bold text-slate-900">รวมเงิน</td>
+                      <td colspan="2" class="border-l border-r border-slate-700 pt-1 pb-1.5 px-2 text-center align-middle font-bold text-slate-900">รวมเงิน</td>
 
                       <!-- Col F: Total Amount -->
-                      <td class="border-l border-r border-slate-700 py-1 pr-2.5 pl-1 text-right align-middle font-bold text-slate-900 text-[11pt]" style="font-variant-numeric: tabular-nums;" x-text="formatCurrency(quotation.totalAmount)"></td>
+                      <td class="border-l border-r border-slate-700 pt-1 pb-1.5 pr-2.5 pl-1 text-right align-middle font-bold text-slate-900 text-[11pt]" style="font-variant-numeric: tabular-nums;" x-text="formatCurrency(quotation.totalAmount)"></td>
                     </tr>
                   </tfoot>
                 </table>
