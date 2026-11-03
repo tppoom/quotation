@@ -66,6 +66,22 @@ async function runTests() {
   assert.strictEqual(ws.getColumn('E').width, 9.63, 'Column E width should be 9.63');
   assert.strictEqual(ws.getColumn('F').width, 10.25, 'Column F width should be 10.25');
 
+  // Verify Row Heights (matching original template)
+  assert.strictEqual(ws.getRow(1).height, 30.75, 'Row 1 height should match template');
+  assert.strictEqual(ws.getRow(2).height, 23.25, 'Row 2 height should match template');
+  assert.strictEqual(ws.getRow(3).height, 4.5, 'Row 3 height should match template');
+  assert.strictEqual(ws.getRow(4).height, 25.5, 'Row 4 height should match template');
+  assert.strictEqual(ws.getRow(5).height, 21.75, 'Row 5 height should match template');
+  assert.strictEqual(ws.getRow(6).height, 26.25, 'Row 6 height should match template');
+  assert.strictEqual(ws.getRow(10).height, 24, 'Row 10 height should match template');
+  assert.strictEqual(ws.getRow(11).height, 18.75, 'Row 11 height should match template');
+  assert.strictEqual(ws.getRow(12).height, 24, 'Row 12 height should match template');
+  assert.strictEqual(ws.getRow(29).height, 21.95, 'Row 29 height should match template');
+  assert.strictEqual(ws.getRow(30).height, 20.25, 'Row 30 height should match template');
+  assert.strictEqual(ws.getRow(31).height, 11.25, 'Row 31 height should match template');
+  assert.strictEqual(ws.getRow(33).height, 21.95, 'Row 33 height should match template');
+  assert.strictEqual(ws.getRow(34).height, 24, 'Row 34 height should match template');
+
   // Verify Headers
   assert.strictEqual(ws.getCell('A1').value, '   ใบเสนอราคา');
   assert.strictEqual(ws.getCell('A2').value, '   QUOTATION');

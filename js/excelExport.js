@@ -82,6 +82,22 @@
       { key: 'F', width: 10.25 }
     ];
 
+    // Row heights matching reference template
+    ws.getRow(1).height = 30.75;
+    ws.getRow(2).height = 23.25;
+    ws.getRow(3).height = 4.5;
+    ws.getRow(4).height = 25.5;
+    ws.getRow(5).height = 21.75;
+    ws.getRow(6).height = 26.25;
+    ws.getRow(10).height = 24;
+    ws.getRow(11).height = 18.75;
+    ws.getRow(12).height = 24;
+    ws.getRow(29).height = 21.95;
+    ws.getRow(30).height = 20.25;
+    ws.getRow(31).height = 11.25;
+    ws.getRow(33).height = 21.95;
+    ws.getRow(34).height = 24;
+
     const fontHeader1 = { name: 'Angsana New', size: 22, bold: true };
     const fontHeader2 = { name: 'Angsana New', size: 16, bold: true };
     const fontRegular = { name: 'Angsana New', size: 14 };
