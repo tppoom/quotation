@@ -111,11 +111,21 @@
       }
 
       table {
-        page-break-inside: avoid;
+        page-break-inside: auto;
+      }
+
+      thead {
+        display: table-header-group;
       }
 
       tr {
         page-break-inside: avoid;
+        break-inside: avoid;
+      }
+
+      tfoot {
+        page-break-inside: avoid;
+        break-inside: avoid;
       }
     }
   </style>
@@ -464,17 +474,27 @@
               บันทึกฉบับร่างอัตโนมัติแล้ว
             </span>
           </div>
-          <button
-            type="button"
-            @click="loadDemoTemplate()"
-            class="text-[11px] text-amber-700 hover:text-amber-800 font-medium flex items-center bg-amber-50 hover:bg-amber-100 px-2 py-1 rounded-lg border border-amber-200 transition shrink-0"
-            title="โหลดข้อมูลตัวอย่างตามไฟล์ต้นแบบ"
-          >
-            <svg class="w-3.5 h-3.5 mr-1 text-amber-600 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd" />
-            </svg>
-            ใส่ข้อมูลตัวอย่าง
-          </button>
+          <div class="flex items-center space-x-1.5 shrink-0">
+            <button
+              type="button"
+              @click="loadDemoTemplate()"
+              class="text-[11px] text-amber-700 hover:text-amber-800 font-medium flex items-center bg-amber-50 hover:bg-amber-100 px-2 py-1 rounded-lg border border-amber-200 transition shrink-0"
+              title="โหลดข้อมูลตัวอย่างตามไฟล์ต้นแบบ (1 หน้ามาตรฐาน)"
+            >
+              <svg class="w-3.5 h-3.5 mr-1 text-amber-600 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd" />
+              </svg>
+              ใส่ข้อมูลตัวอย่าง
+            </button>
+            <button
+              type="button"
+              @click="loadLongDemoTemplate()"
+              class="text-[11px] text-indigo-700 hover:text-indigo-800 font-medium flex items-center bg-indigo-50 hover:bg-indigo-100 px-2 py-1 rounded-lg border border-indigo-200 transition shrink-0"
+              title="โหลดข้อมูลตัวอย่าง 27 รายการเพื่อทดสอบรายการยาว"
+            >
+              ทดสอบ 27 รายการยาว
+            </button>
+          </div>
         </div>
 
         <!-- 1. ข้อมูลผู้เสนอราคา / ร้านค้า (กรอกครั้งเดียว บันทึกจำไว้อัตโนมัติ) -->
@@ -947,7 +967,7 @@
             class="transition-all duration-200 relative shrink-0"
             :style="{
               width: (794 * computedScale) + 'px',
-              height: (1123 * computedScale) + 'px'
+              height: (Math.max(1123, 1123 + Math.max(0, (quotation.items ? quotation.items.length : 0) - 17) * 28) * computedScale) + 'px'
             }"
           >
             <!-- Exact A4 Document Container -->

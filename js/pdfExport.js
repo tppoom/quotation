@@ -39,7 +39,7 @@
       }
       if (parentScaler && parentScaler.style) {
         parentScaler.style.width = '794px';
-        parentScaler.style.height = '1123px';
+        parentScaler.style.height = (el.offsetHeight ? el.offsetHeight + 'px' : '1123px');
         parentScaler.style.overflow = 'visible';
       }
       if (outerContainer && outerContainer.style) {
@@ -122,7 +122,7 @@
       }
       if (parentScaler && parentScaler.style) {
         parentScaler.style.width = '794px';
-        parentScaler.style.height = '1123px';
+        parentScaler.style.height = (el.offsetHeight ? el.offsetHeight + 'px' : '1123px');
         parentScaler.style.overflow = 'visible';
       }
       if (outerContainer && outerContainer.style) {
@@ -165,8 +165,24 @@
 
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+    const pageHeight = pdf.internal.pageSize.getHeight ? pdf.internal.pageSize.getHeight() : 297;
 
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    if (pdfHeight > (pageHeight + 2) && typeof pdf.addPage === 'function') {
+      let heightLeft = pdfHeight;
+      let position = 0;
+
+      pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight, undefined, 'FAST');
+      heightLeft -= pageHeight;
+
+      while (heightLeft > 0) {
+        position -= pageHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight, undefined, 'FAST');
+        heightLeft -= pageHeight;
+      }
+    } else {
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
+    }
     const safeFilename = filename || 'quotation';
     pdf.save(safeFilename.endsWith('.pdf') ? safeFilename : `${safeFilename}.pdf`);
   }

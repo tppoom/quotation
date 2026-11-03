@@ -306,6 +306,60 @@
         this.flashNotice('⚡ โหลดตัวอย่างใบเสนอราคาตามไฟล์ต้นแบบเรียบร้อยแล้ว');
       },
 
+      loadLongDemoTemplate() {
+        this.quotation = {
+          id: 'qt_demo_long_' + Date.now(),
+          docNo: 'QT-202204-LONG',
+          docDate: '2022-04-24',
+          jobTitle: 'งานติดตั้งระบบรดน้ำอัตโนมัติ สวนเกษตรเฟส 1-2 (โครงการใหญ่)',
+          customer: {
+            name: 'บริษัท เพิ่ม เอสเคท จำกัด',
+            address: '82 ถนนสังคมสงเคราะห์ แขวงลาดพร้าว เขตลาดพร้าว กรุงเทพฯ 10230'
+          },
+          seller: {
+            name: 'นายสมชาย ใจดี (ผู้เสนอราคาตัวอย่าง)',
+            address: '89/332 ถนนประชาอุทิศ แขวงดอนเมือง เขตดอนเมือง กรุงเทพฯ 10210',
+            tel1: '081 234 5678',
+            tel2: '089 876 5432',
+            bank: 'ธ.กรุงเทพ 123-4-56789-0'
+          },
+          items: [
+            { id: 'l_1', type: 'item', itemNo: '1', description: 'ระบบรดน้ำอัตโนมัติ โซน 1 สวนหน้าบ้าน', unit: 'ชุด', qty: 1, unitPrice: 28500, amount: 28500 },
+            { id: 'l_2', type: 'bullet', description: ' - หัวป็อบอัพ Hunter Pro-Spray 4 หุน 8 หัว' },
+            { id: 'l_3', type: 'bullet', description: ' - ท่อ HDPE PN6 ขนาด 25 มม. ความยาว 60 เมตร' },
+            { id: 'l_4', type: 'bullet', description: ' - ข้อต่อสวมอัด HDPE Compression Fit 12 ตัว' },
+            { id: 'l_5', type: 'bullet', description: ' - โซลินอยด์วาล์ว 1 นิ้ว 24VAC พร้อมกล่องวาล์ว' },
+            { id: 'l_6', type: 'item', itemNo: '2', description: 'ระบบมินิสปริงเกอร์ โซน 2 สวนหย่อมด้านข้าง', unit: 'ชุด', qty: 1, unitPrice: 19200, amount: 19200 },
+            { id: 'l_7', type: 'bullet', description: ' - มินิสปริงเกอร์พร้อมก้านปักและสายไมโคร 24 จุด' },
+            { id: 'l_8', type: 'bullet', description: ' - ท่อ PE 20 มม. ความยาว 45 เมตร' },
+            { id: 'l_9', type: 'bullet', description: ' - วาล์วปรับแรงดันน้ำอัตโนมัติ 1 ชุด' },
+            { id: 'l_10', type: 'item', itemNo: '3', description: 'ระบบน้ำหยด โซน 3 กระถางต้นไม้และแนวรั้ว', unit: 'ชุด', qty: 1, unitPrice: 14500, amount: 14500 },
+            { id: 'l_11', type: 'bullet', description: ' - หัวน้ำหยดปรับอัตราการไหลชดเชยแรงดัน 40 จุด' },
+            { id: 'l_12', type: 'bullet', description: ' - ท่อไมโคร PE 4/7 มม. ความยาว 80 เมตร' },
+            { id: 'l_13', type: 'item', itemNo: '4', description: 'ระบบควบคุมอัจฉริยะ WiFi & Sensor', unit: 'ชุด', qty: 1, unitPrice: 18500, amount: 18500 },
+            { id: 'l_14', type: 'bullet', description: ' - ตู้คอนโทรล 4 สถานี สั่งงานผ่านสมาร์ตโฟน' },
+            { id: 'l_15', type: 'bullet', description: ' - เซนเซอร์วัดความชื้นในดินและฝนตกอัตโนมัติ' },
+            { id: 'l_16', type: 'bullet', description: ' - ระบบป้องกันไฟกระชากและเบรกเกอร์กันดูด' },
+            { id: 'l_17', type: 'item', itemNo: '5', description: 'งานปั๊มน้ำและระบบกรองน้ำเกษตร', unit: 'ชุด', qty: 1, unitPrice: 16800, amount: 16800 },
+            { id: 'l_18', type: 'bullet', description: ' - ปั๊มหอยโข่งแสตนเลส 1.5 แรงม้า' },
+            { id: 'l_19', type: 'bullet', description: ' - กรองตะกอนแบบดิสก์ 1.5 นิ้ว 120 เมช' },
+            { id: 'l_20', type: 'bullet', description: ' - เช็ควาล์วและเกจวัดแรงดันน้ำ 0-10 บาร์' },
+            { id: 'l_21', type: 'item', itemNo: '6', description: 'ค่าบริการติดตั้ง ขุดร่องดิน และทดสอบระบบ', unit: 'งาน', qty: 1, unitPrice: 15000, amount: 15000 },
+            { id: 'l_22', type: 'bullet', description: ' - งานเดินท่อใต้ดินและเก็บความเรียบร้อยหน้างาน' },
+            { id: 'l_23', type: 'bullet', description: ' - การทดสอบแรงดันน้ำและปรับรัศมีสปริงเกอร์' },
+            { id: 'l_24', type: 'bullet', description: ' - คู่มือการใช้งานและฝึกอบรมการตั้งโปรแกรม' },
+            { id: 'l_25', type: 'note', description: 'เงื่อนไขการรับประกันและการชำระเงิน' },
+            { id: 'l_26', type: 'bullet', description: ' - รับประกันอุปกรณ์และงานติดตั้ง 1 ปีเต็ม' },
+            { id: 'l_27', type: 'bullet', description: ' - มัดจำ 50% เมื่อสั่งซื้อ, 50% เมื่องานแล้วเสร็จส่งมอบ' }
+          ],
+          totalAmount: 112500,
+          totalTextThai: '(หนึ่งแสนหนึ่งหมื่นสองพันห้าร้อยบาทถ้วน)'
+        };
+        this.calculateTotals();
+        setTimeout(() => this.computeScale(), 100);
+        this.flashNotice('⚡ โหลดตัวอย่างใบเสนอราคา 27 รายการ (ทดสอบรายการยาว) เรียบร้อยแล้ว');
+      },
+
       addItemRow() {
         if (!Array.isArray(this.quotation.items)) {
           this.quotation.items = [];

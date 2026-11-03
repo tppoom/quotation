@@ -215,13 +215,9 @@
     ws.getCell('B10').value = 'รายการ';
     ws.getCell('B11').value = 'DESCRIPTION';
 
-    ws.mergeCells('C10:C11');
     ws.getCell('C10').value = 'หน่วย';
-    ws.mergeCells('D10:D11');
     ws.getCell('D10').value = 'จำนวน';
-    ws.mergeCells('E10:E11');
     ws.getCell('E10').value = 'ราคา/หน่วย';
-    ws.mergeCells('F10:F11');
     ws.getCell('F10').value = 'จำนวนเงิน';
 
     const thCells = ['A10', 'B10', 'C10', 'D10', 'E10', 'F10', 'A11', 'B11'];
@@ -231,12 +227,23 @@
       c.alignment = { horizontal: 'center', vertical: 'middle' };
     });
 
-    // Populate Items: Rows 12 to 28 (Total 17 data rows like original)
+    // Merge C10:C11, D10:D11, E10:E11, F10:F11 with independent top and bottom borders
+    // Using mergeCellsWithoutStyle guarantees the top border is not overwritten by the bottom cell
+    ['C', 'D', 'E', 'F'].forEach(col => {
+      ws.getCell(`${col}10`).border = { top: thin, left: thin, right: thin };
+      ws.getCell(`${col}10`).alignment = { horizontal: 'center', vertical: 'middle' };
+      ws.getCell(`${col}11`).border = { bottom: thin, left: thin, right: thin };
+      ws.mergeCellsWithoutStyle(`${col}10:${col}11`);
+    });
+
+    // Populate Items: Rows 12 to endRow (at least 17 data rows to match A4 single page standard)
     const startRow = 12;
-    const endRow = 28;
     const items = data.items || [];
+    const dataRowCount = Math.max(17, items.length);
+    const endRow = startRow + dataRowCount - 1;
 
     for (let r = startRow; r <= endRow; r++) {
+      ws.getRow(r).height = 24;
       const idx = r - startRow;
       const item = items[idx];
 
@@ -272,49 +279,63 @@
       });
     }
 
-    // Row 29: Total Summary
-    ws.mergeCells('A29:C29');
-    ws.getCell('A29').value = data.totalTextThai || '';
-    ws.getCell('A29').font = fontBold;
-    ws.getCell('A29').alignment = { horizontal: 'center', vertical: 'middle' };
+    // Dynamic Total Summary Row
+    const totalRow = endRow + 1;
+    ws.getRow(totalRow).height = 21.95;
+    ws.mergeCells(`A${totalRow}:C${totalRow}`);
+    ws.getCell(`A${totalRow}`).value = data.totalTextThai || '';
+    ws.getCell(`A${totalRow}`).font = fontBold;
+    ws.getCell(`A${totalRow}`).alignment = { horizontal: 'center', vertical: 'middle' };
 
-    ws.mergeCells('D29:E29');
-    ws.getCell('D29').value = 'รวมเงิน';
-    ws.getCell('D29').font = fontBold;
-    ws.getCell('D29').alignment = { horizontal: 'center', vertical: 'middle' };
+    ws.mergeCells(`D${totalRow}:E${totalRow}`);
+    ws.getCell(`D${totalRow}`).value = 'รวมเงิน';
+    ws.getCell(`D${totalRow}`).font = fontBold;
+    ws.getCell(`D${totalRow}`).alignment = { horizontal: 'center', vertical: 'middle' };
 
-    ws.getCell('F29').value = { formula: `SUM(F${startRow}:F${endRow})`, result: data.totalAmount || 0 };
-    ws.getCell('F29').font = fontBold;
-    ws.getCell('F29').numFmt = '#,##0.00';
-    ws.getCell('F29').alignment = { horizontal: 'right', vertical: 'middle' };
+    ws.getCell(`F${totalRow}`).value = { formula: `SUM(F${startRow}:F${endRow})`, result: data.totalAmount || 0 };
+    ws.getCell(`F${totalRow}`).font = fontBold;
+    ws.getCell(`F${totalRow}`).numFmt = '#,##0.00';
+    ws.getCell(`F${totalRow}`).alignment = { horizontal: 'right', vertical: 'middle' };
 
-    // Row 32-34: Signatures
-    ws.getCell('A32').value = 'ผู้อนุมัติ :';
-    ws.getCell('A32').font = fontRegular;
+    // Dynamic Signature Rows
+    const sigSpacerRow = totalRow + 1;
+    const sigEmptyRow = totalRow + 2;
+    const sigHeaderRow = totalRow + 3;
+    const sigPosRow = totalRow + 4;
+    const sigParenRow = totalRow + 5;
 
-    ws.getCell('D32').value = '   ผู้เสนอ :';
-    ws.getCell('D32').font = fontRegular;
-    ws.getCell('D32').alignment = { horizontal: 'left' };
+    ws.getRow(sigSpacerRow).height = 20.25;
+    ws.getRow(sigEmptyRow).height = 11.25;
+    ws.getRow(sigHeaderRow).height = 24;
+    ws.getRow(sigPosRow).height = 21.95;
+    ws.getRow(sigParenRow).height = 24;
 
-    ws.mergeCells('E32:F32');
-    ws.getCell('E32').value = data.seller?.name || '';
-    ws.getCell('E32').font = fontBold;
-    ws.getCell('E32').alignment = { horizontal: 'center' };
+    ws.getCell(`A${sigHeaderRow}`).value = 'ผู้อนุมัติ :';
+    ws.getCell(`A${sigHeaderRow}`).font = fontRegular;
 
-    ws.getCell('A33').value = 'ตำแหน่ง ';
-    ws.getCell('A33').font = fontRegular;
+    ws.getCell(`D${sigHeaderRow}`).value = '   ผู้เสนอ :';
+    ws.getCell(`D${sigHeaderRow}`).font = fontRegular;
+    ws.getCell(`D${sigHeaderRow}`).alignment = { horizontal: 'left' };
 
-    ws.mergeCells('E33:F33');
-    ws.getCell('E33').value = formatThaiDateLong(data.docDate);
-    ws.getCell('E33').font = fontRegular;
-    ws.getCell('E33').alignment = { horizontal: 'center' };
+    ws.mergeCells(`E${sigHeaderRow}:F${sigHeaderRow}`);
+    ws.getCell(`E${sigHeaderRow}`).value = data.seller?.name || '';
+    ws.getCell(`E${sigHeaderRow}`).font = fontBold;
+    ws.getCell(`E${sigHeaderRow}`).alignment = { horizontal: 'center' };
 
-    ws.getCell('B34').value = '   (                                                                                )';
-    ws.getCell('B34').font = fontRegular;
-    ws.getCell('B34').alignment = { horizontal: 'center' };
+    ws.getCell(`A${sigPosRow}`).value = 'ตำแหน่ง ';
+    ws.getCell(`A${sigPosRow}`).font = fontRegular;
+
+    ws.mergeCells(`E${sigPosRow}:F${sigPosRow}`);
+    ws.getCell(`E${sigPosRow}`).value = formatThaiDateLong(data.docDate);
+    ws.getCell(`E${sigPosRow}`).font = fontRegular;
+    ws.getCell(`E${sigPosRow}`).alignment = { horizontal: 'center' };
+
+    ws.getCell(`B${sigParenRow}`).value = '   (                                                                                )';
+    ws.getCell(`B${sigParenRow}`).font = fontRegular;
+    ws.getCell(`B${sigParenRow}`).alignment = { horizontal: 'center' };
 
     // =================================================================
-    // 100% COMPLETE TABLE & FRAME BORDER RULES (Rows 3 to 34)
+    // 100% COMPLETE TABLE & FRAME BORDER RULES (Rows 3 to sigParenRow)
     // =================================================================
     // 1. Row 3 bottom border divider
     ['A', 'B', 'C', 'D', 'E', 'F'].forEach(c => {
@@ -363,10 +384,10 @@
     ws.getCell('E8').border = { top: thin };
     ws.getCell('F8').border = { top: thin, bottom: thin, left: thin, right: thin };
 
-    // D9:F9 is merged Bank Account Box
-    ['D9', 'E9', 'F9'].forEach(addr => {
-      ws.getCell(addr).border = { top: thin, bottom: thin, left: thin, right: thin };
-    });
+    // D9:F9 is merged Bank Account Box with continuous bottom border
+    ws.getCell('D9').border = { top: thin, bottom: thin, left: thin };
+    ws.getCell('E9').border = { top: thin, bottom: thin };
+    ws.getCell('F9').border = { top: thin, bottom: thin, right: thin };
 
     // 6. Table Header Rows 10 & 11
     ws.getCell('A10').border = { top: thin, left: thin, right: thin };
@@ -374,17 +395,15 @@
     ws.getCell('A11').border = { bottom: thin, left: thin, right: thin };
     ws.getCell('B11').border = { bottom: thin, left: thin };
 
-    // Header merged columns C, D, E, F: Set top, bottom, left, right on merged master
+    // Header merged columns C, D, E, F: Set top on row 10, bottom on row 11
     ['C', 'D', 'E', 'F'].forEach(col => {
-      ws.getCell(`${col}10`).border = { top: thin, bottom: thin, left: thin, right: thin };
-      ws.getCell(`${col}11`).border = { top: thin, bottom: thin, left: thin, right: thin };
+      ws.getCell(`${col}10`).border = { top: thin, left: thin, right: thin };
+      ws.getCell(`${col}11`).border = { bottom: thin, left: thin, right: thin };
     });
 
-    // 7. Data Rows 12 to 28
+    // 7. Data Rows 12 to endRow
     for (let r = startRow; r <= endRow; r++) {
-      ws.getCell(`A${r}`).border = (r === 12 || r === 26 || r === 27 || r === 28)
-        ? { left: thin, right: thin }
-        : { left: thin };
+      ws.getCell(`A${r}`).border = { left: thin, right: thin };
       ws.getCell(`B${r}`).border = { left: thin };
       ['C', 'D', 'E', 'F'].forEach(c => {
         ws.getCell(`${c}${r}`).border = { left: thin, right: thin };
@@ -397,45 +416,48 @@
       }
     }
 
-    // 8. Row 29 Total Summary
-    ws.getCell('A29').border = { bottom: thin, left: thin, right: thin };
-    ws.getCell('B29').border = { bottom: thin, left: thin, right: thin };
-    ws.getCell('C29').border = { bottom: thin, left: thin, right: thin };
-    ws.getCell('D29').border = { bottom: thin, left: thin, right: thin };
-    ws.getCell('E29').border = { bottom: thin, left: thin, right: thin };
-    ws.getCell('F29').border = { bottom: thin, left: thin, right: thin };
+    // 8. Total Summary Row
+    ['A', 'B', 'C', 'D', 'E', 'F'].forEach(col => {
+      ws.getCell(`${col}${totalRow}`).border = { top: thin, bottom: thin, left: thin, right: thin };
+    });
 
-    // 9. Rows 30 to 34 Signatures Table Frame
-    ws.getCell('A30').border = { top: thin, left: thin, right: thin };
-    ws.getCell('B30').border = { top: thin, left: thin, right: thin };
-    ws.getCell('C30').border = { top: thin, left: thin, right: thin };
-    ws.getCell('F30').border = { right: thin };
+    // 9. Signatures Table Frame
+    ws.getCell(`A${sigSpacerRow}`).border = { top: thin, left: thin, right: thin };
+    ws.getCell(`B${sigSpacerRow}`).border = { top: thin, left: thin, right: thin };
+    ws.getCell(`C${sigSpacerRow}`).border = { top: thin, left: thin, right: thin };
+    ws.getCell(`F${sigSpacerRow}`).border = { right: thin };
 
-    ws.getCell('A31').border = { left: thin };
-    ws.getCell('C31').border = { right: thin };
-    ws.getCell('D31').border = { left: thin };
-    ws.getCell('E31').border = { right: thin };
-    ws.getCell('F31').border = { right: thin };
+    ws.getCell(`A${sigEmptyRow}`).border = { left: thin };
+    ws.getCell(`C${sigEmptyRow}`).border = { right: thin };
+    ws.getCell(`D${sigEmptyRow}`).border = { left: thin };
+    ws.getCell(`E${sigEmptyRow}`).border = { right: thin };
+    ws.getCell(`F${sigEmptyRow}`).border = { right: thin };
 
-    ws.getCell('A32').border = { left: thin };
-    ws.getCell('C32').border = { right: thin };
-    ws.getCell('D32').border = { left: thin };
-    ws.getCell('E32').border = { bottom: hair, right: thin };
-    ws.getCell('F32').border = { bottom: hair, right: thin };
+    ws.getCell(`A${sigHeaderRow}`).border = { left: thin };
+    ws.getCell(`C${sigHeaderRow}`).border = { right: thin };
+    ws.getCell(`D${sigHeaderRow}`).border = { left: thin };
+    ws.getCell(`E${sigHeaderRow}`).border = { bottom: hair, right: thin };
+    ws.getCell(`F${sigHeaderRow}`).border = { bottom: hair, right: thin };
 
-    ws.getCell('A33').border = { left: thin };
-    ws.getCell('B33').border = { top: hair, bottom: hair };
-    ws.getCell('C33').border = { right: thin };
-    ws.getCell('D33').border = { left: thin };
-    ws.getCell('E33').border = { right: thin };
-    ws.getCell('F33').border = { right: thin };
+    ws.getCell(`A${sigPosRow}`).border = { left: thin };
+    ws.getCell(`B${sigPosRow}`).border = { top: hair, bottom: hair };
+    ws.getCell(`C${sigPosRow}`).border = { right: thin };
+    ws.getCell(`D${sigPosRow}`).border = { left: thin };
+    ws.getCell(`E${sigPosRow}`).border = { right: thin };
+    ws.getCell(`F${sigPosRow}`).border = { right: thin };
 
-    ws.getCell('A34').border = { bottom: thin, left: thin };
-    ws.getCell('B34').border = { bottom: thin };
-    ws.getCell('C34').border = { bottom: thin };
-    ws.getCell('D34').border = { bottom: thin, left: thin };
-    ws.getCell('E34').border = { bottom: thin };
-    ws.getCell('F34').border = { bottom: thin, right: thin };
+    ws.getCell(`A${sigParenRow}`).border = { bottom: thin, left: thin };
+    ws.getCell(`B${sigParenRow}`).border = { bottom: thin };
+    ws.getCell(`C${sigParenRow}`).border = { bottom: thin };
+    ws.getCell(`D${sigParenRow}`).border = { bottom: thin, left: thin };
+    ws.getCell(`E${sigParenRow}`).border = { bottom: thin };
+    ws.getCell(`F${sigParenRow}`).border = { bottom: thin, right: thin };
+
+    // Dynamic Page Setup Print Area
+    ws.pageSetup.printArea = `A1:F${sigParenRow}`;
+    if (items.length > 17) {
+      ws.pageSetup.fitToHeight = 0;
+    }
 
     return wb;
   }
