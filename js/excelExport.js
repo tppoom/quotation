@@ -7,24 +7,45 @@
   }
 }(typeof self !== 'undefined' ? self : this, function() {
 
+  function parseDateParts(dateInput) {
+    if (!dateInput) return null;
+    if (typeof dateInput === 'string') {
+      const match = dateInput.trim().match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+      if (match) {
+        return {
+          year: parseInt(match[1], 10),
+          month: parseInt(match[2], 10) - 1,
+          day: parseInt(match[3], 10)
+        };
+      }
+    }
+    const d = dateInput instanceof Date ? dateInput : new Date(dateInput);
+    if (isNaN(d.getTime())) return null;
+    return {
+      year: d.getFullYear(),
+      month: d.getMonth(),
+      day: d.getDate()
+    };
+  }
+
   function formatThaiDateShort(dateStr) {
     if (!dateStr) return '';
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return dateStr;
+    const parts = parseDateParts(dateStr);
+    if (!parts) return dateStr;
     const months = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
-    const thaiYear = (d.getFullYear() + 543).toString().slice(-2);
-    return `${d.getDate()} ${months[d.getMonth()]} ${thaiYear}`;
+    const thaiYear = (parts.year + 543).toString().slice(-2);
+    return `${parts.day} ${months[parts.month]} ${thaiYear}`;
   }
 
   function formatThaiDateLong(dateStr) {
     if (!dateStr) return '';
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return dateStr;
+    const parts = parseDateParts(dateStr);
+    if (!parts) return dateStr;
     const months = [
       'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
       'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
     ];
-    return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear() + 543}`;
+    return `${parts.day} ${months[parts.month]} ${parts.year + 543}`;
   }
 
   function sanitizeFilename(name) {
