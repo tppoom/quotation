@@ -19,12 +19,27 @@
       throw new Error('html2canvas library is not loaded');
     }
 
-    const canvas = await h2c(el, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: '#ffffff',
-      logging: false
-    });
+    const origTransform = (el.style && el.style.transform) || '';
+    const origPosition = (el.style && el.style.position) || '';
+    if (el.style) {
+      el.style.transform = 'none';
+      el.style.position = 'relative';
+    }
+
+    let canvas;
+    try {
+      canvas = await h2c(el, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        logging: false
+      });
+    } finally {
+      if (el.style) {
+        el.style.transform = origTransform;
+        el.style.position = origPosition;
+      }
+    }
 
     const dataUrl = canvas.toDataURL('image/png');
     const link = doc.createElement('a');
@@ -54,12 +69,27 @@
     }
 
     const jsPDFClass = jspdfLib.jsPDF || jspdfLib;
-    const canvas = await h2c(el, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: '#ffffff',
-      logging: false
-    });
+    const origTransform = (el.style && el.style.transform) || '';
+    const origPosition = (el.style && el.style.position) || '';
+    if (el.style) {
+      el.style.transform = 'none';
+      el.style.position = 'relative';
+    }
+
+    let canvas;
+    try {
+      canvas = await h2c(el, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        logging: false
+      });
+    } finally {
+      if (el.style) {
+        el.style.transform = origTransform;
+        el.style.position = origPosition;
+      }
+    }
 
     const imgData = canvas.toDataURL('image/png');
     const pdf = new jsPDFClass({

@@ -95,6 +95,11 @@
       historyList: [],
       showHistoryModal: false,
       showSellerModal: false,
+      showMobileExportSheet: false,
+      showMobileMenu: false,
+      activeMobileTab: 'form', // 'form' | 'preview'
+      previewZoom: 'fit', // 'fit' | '100' | '75'
+      computedScale: 1,
       historySearch: '',
       saveNotice: '',
       sellerProfileForm: { ...seller },
@@ -120,6 +125,50 @@
               smMgr.saveCurrentDraft(this.quotation);
             }
           });
+        }
+
+        if (typeof window !== 'undefined') {
+          window.addEventListener('resize', () => {
+            this.computeScale();
+          });
+          window.addEventListener('orientationchange', () => {
+            setTimeout(() => this.computeScale(), 150);
+          });
+          setTimeout(() => {
+            this.computeScale();
+          }, 100);
+        }
+      },
+
+      computeScale() {
+        if (typeof document === 'undefined') return;
+        const container = document.getElementById('preview-outer-container');
+        if (!container) return;
+        const availableWidth = container.clientWidth - 24;
+        if (this.previewZoom === 'fit') {
+          if (availableWidth < 810) {
+            this.computedScale = Math.max(0.3, Math.round((availableWidth / 804) * 100) / 100);
+          } else {
+            this.computedScale = 1.0;
+          }
+        } else if (this.previewZoom === '75') {
+          this.computedScale = 0.75;
+        } else {
+          this.computedScale = 1.0;
+        }
+      },
+
+      setPreviewZoom(zoom) {
+        this.previewZoom = zoom;
+        this.computeScale();
+      },
+
+      setMobileTab(tab) {
+        this.activeMobileTab = tab;
+        if (tab === 'preview') {
+          setTimeout(() => {
+            this.computeScale();
+          }, 60);
         }
       },
 
@@ -156,6 +205,54 @@
         };
         this.calculateTotals();
         this.flashNotice('เริ่มต้นใบเสนอราคาใหม่เรียบร้อย');
+      },
+
+      loadDemoTemplate() {
+        this.quotation = {
+          id: 'qt_demo_' + Date.now(),
+          docNo: 'QT-202204-0001',
+          docDate: '2022-04-24',
+          jobTitle: 'งานระบบน้ำอัตโนมัติ',
+          customer: {
+            name: 'บริษัท เพิ่ม เอสเคท จำกัด',
+            address: '82 ถนนสังคมสงเคราะห์ แขวงลาดพร้าว กรุงเทพฯ'
+          },
+          seller: {
+            name: 'นายสมชาย ใจดี (ผู้เสนอราคาตัวอย่าง)',
+            address: '89/332 ถนนประชาอุทิศ แขวงดอนเมือง เขตดอนเมือง กรุงเทพฯ 10210',
+            tel1: '081 234 5678',
+            tel2: '089 876 5432',
+            bank: 'ธ.กรุงเทพ 123-4-56789-0'
+          },
+          items: [
+            {
+              id: 'demo_item_1',
+              type: 'item',
+              itemNo: '1',
+              description: 'ระบบรดน้ำอัตโนมัติ 4 โซน (ด้านหน้า)',
+              unit: 'ชุด',
+              qty: 1,
+              unitPrice: 57552.9,
+              amount: 57552.9
+            },
+            { id: 'demo_b_1', type: 'bullet', description: ' - หัวป็อบอัพ 4 หุนจำนวน 5 หัว' },
+            { id: 'demo_b_2', type: 'bullet', description: ' - ท่อ PE 20 มิลลิเมตร' },
+            { id: 'demo_b_3', type: 'bullet', description: ' - ท่อไมโคร' },
+            { id: 'demo_b_4', type: 'bullet', description: ' - ตู้ไฟตั้งเวลาเปิด/ปิดโซลินอยวาล์ว 2 ชุด' },
+            { id: 'demo_b_5', type: 'bullet', description: ' - หัวมินิสปริงเกอร์ + หัวมินิสปริงเกอร์พร้อมเสาปัก' },
+            { id: 'demo_b_6', type: 'bullet', description: ' - อุปกรณ์ข้อต่อ' },
+            { id: 'demo_b_7', type: 'bullet', description: 'ระบบรดน้ำอัตโนมัติ 1 โซน (ด้านหลัง)' },
+            { id: 'demo_b_8', type: 'bullet', description: ' - ตู้ไฟตั้งเวลาเปิด/ปิดโซลินอยวาล์ว 2 ชุด' },
+            { id: 'demo_b_9', type: 'bullet', description: ' - ท่อ + อุปกรณ์' },
+            { id: 'demo_n_1', type: 'note', description: 'การเบิกค่างวดงาน' },
+            { id: 'demo_b_10', type: 'bullet', description: 'เบิกมัดจำ 70% และ 30% เมื่องานเสร็จสิ้น' }
+          ],
+          totalAmount: 57552.9,
+          totalTextThai: '(ห้าหมื่นเจ็ดพันห้าร้อยห้าสิบสองบาทเก้าสิบสตางค์)'
+        };
+        this.calculateTotals();
+        setTimeout(() => this.computeScale(), 100);
+        this.flashNotice('⚡ โหลดตัวอย่างใบเสนอราคาตามไฟล์ต้นแบบเรียบร้อยแล้ว');
       },
 
       addItemRow() {
@@ -351,7 +448,12 @@
       },
 
       async exportPNG() {
+        const prevTab = this.activeMobileTab;
         try {
+          if (this.activeMobileTab !== 'preview') {
+            this.activeMobileTab = 'preview';
+            await new Promise(r => setTimeout(r, 60));
+          }
           const filename = this.getFilename('png');
           const de = getDocExporter();
           if (de && typeof de.exportToPNG === 'function') {
@@ -361,11 +463,18 @@
         } catch (err) {
           console.error('Export PNG failed:', err);
           this.flashNotice('ส่งออก PNG ล้มเหลว: ' + err.message);
+        } finally {
+          this.activeMobileTab = prevTab;
         }
       },
 
       async exportPDF() {
+        const prevTab = this.activeMobileTab;
         try {
+          if (this.activeMobileTab !== 'preview') {
+            this.activeMobileTab = 'preview';
+            await new Promise(r => setTimeout(r, 60));
+          }
           const filename = this.getFilename('pdf');
           const de = getDocExporter();
           if (de && typeof de.exportToPDF === 'function') {
@@ -375,6 +484,8 @@
         } catch (err) {
           console.error('Export PDF failed:', err);
           this.flashNotice('ส่งออก PDF ล้มเหลว: ' + err.message);
+        } finally {
+          this.activeMobileTab = prevTab;
         }
       },
 
