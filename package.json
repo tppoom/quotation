@@ -8,7 +8,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "node test/bahtText.test.js && node test/storage.test.js && node test/excelMatch.test.js && node test/pdfExport.test.js"
+    "test": "node test/bahtText.test.js && node test/storage.test.js && node test/excelMatch.test.js && node test/pdfExport.test.js && node test/app.test.js"
   },
   "keywords": [],
   "author": "",
