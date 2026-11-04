@@ -63,8 +63,8 @@
 
     #quotation-preview table tbody td {
       vertical-align: middle;
-      padding-top: 5px;
-      padding-bottom: 3px;
+      padding-top: 2px;
+      padding-bottom: 5px;
       line-height: 1.25;
     }
 
@@ -1127,73 +1127,71 @@
                   <!-- Table Footer: Row 29 (Totals) + Rows 30-34 (Framed Signature Boxes) -->
                   <tfoot style="font-size: 10pt;">
                     <!-- Row 29: Total Amount & Thai Baht Text -->
-                    <tr class="border-t border-b border-slate-700 font-bold" style="height: 30px;">
+                    <tr class="border-t border-b border-slate-700 font-bold" style="height: 32px;">
                       <!-- Col A to C Merged: Thai Baht Text -->
-                      <td colspan="3" class="border-l border-r border-slate-700 pt-1 pb-1 px-3 text-center align-middle font-bold text-slate-900" x-text="quotation.totalTextThai"></td>
+                      <td colspan="3" class="border-l border-r border-slate-700 pt-0.5 pb-2 px-3 text-center align-middle font-bold text-slate-900" x-text="quotation.totalTextThai"></td>
 
                       <!-- Col D to E Merged: รวมเงิน Label -->
-                      <td colspan="2" class="border-l border-r border-slate-700 pt-1 pb-1 px-2 text-center align-middle font-bold text-slate-900">รวมเงิน</td>
+                      <td colspan="2" class="border-l border-r border-slate-700 pt-0.5 pb-2 px-2 text-center align-middle font-bold text-slate-900">รวมเงิน</td>
 
                       <!-- Col F: Total Amount -->
-                      <td class="border-l border-r border-slate-700 pt-1 pb-1 pr-2.5 pl-1 text-right align-middle font-bold text-slate-900 text-[11pt]" style="font-variant-numeric: tabular-nums;" x-text="formatCurrency(quotation.totalAmount)"></td>
+                      <td class="border-l border-r border-slate-700 pt-0.5 pb-2 pr-2.5 pl-1 text-right align-middle font-bold text-slate-900 text-[11pt]" style="font-variant-numeric: tabular-nums;" x-text="formatCurrency(quotation.totalAmount)"></td>
                     </tr>
 
                     <!-- Row 30: Spacer Row between Totals and Signature Boxes -->
-                    <tr style="height: 14px;">
+                    <tr style="height: 10px;">
                       <td colspan="3" class="border-l border-r border-slate-700"></td>
                       <td colspan="3" class="border-r border-slate-700"></td>
                     </tr>
 
-                    <!-- Row 31/32: Signature Header Row -->
-                    <tr style="height: 32px;" class="align-middle">
-                      <!-- Box 1 (Cols A-C): Approver Line -->
-                      <td colspan="3" class="border-l border-r border-slate-700 px-4">
-                        <div class="flex items-center">
-                          <span class="font-bold text-slate-900 whitespace-nowrap shrink-0 mr-2" style="font-size: 10pt; width: 64px;">ผู้อนุมัติ :</span>
-                          <span class="border-b border-dotted border-slate-500 grow mb-0.5"></span>
+                    <!-- Row 31 to 34: Signature Frame Section -->
+                    <tr style="height: 108px;" class="border-b border-slate-700 align-top">
+                      <!-- Box 1 (Cols A-C): Approver (Customer) -->
+                      <td colspan="3" class="border-l border-r border-slate-700 px-5 py-2.5 align-top">
+                        <div class="flex flex-col justify-between h-full py-0.5">
+                          <!-- 1. Header Label -->
+                          <div class="font-bold text-slate-900 text-[10pt]">
+                            ผู้อนุมัติ :
+                          </div>
+                          
+                          <!-- 2. Dotted Signing Line (จุดที่เอาไว้เซ็น) -->
+                          <div class="w-full flex justify-center py-1">
+                            <span class="border-b border-dotted border-slate-500 w-[75%] inline-block"></span>
+                          </div>
+
+                          <!-- 3. Parentheses for printed name - centered directly under the dotted signing line -->
+                          <div class="w-full text-center text-slate-600 font-normal tracking-wider text-[9pt]">
+                            (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
+                          </div>
+
+                          <!-- 4. Approver Position Line -->
+                          <div class="flex items-center text-slate-900 font-bold text-[9.5pt] pt-1 px-1">
+                            <span class="shrink-0 mr-1.5 font-bold">ตำแหน่ง :</span>
+                            <span class="border-b border-dotted border-slate-500 grow max-w-[75%] mb-0.5"></span>
+                          </div>
                         </div>
                       </td>
 
-                      <!-- Box 2 (Cols D-F): Proposer Line -->
-                      <td colspan="3" class="border-r border-slate-700 px-2.5">
-                        <div class="flex items-center">
-                          <span class="font-bold text-slate-900 whitespace-nowrap shrink-0 mr-1.5" style="font-size: 9pt; width: 46px;">ผู้เสนอ :</span>
-                          <span class="border-b border-slate-500 font-bold text-slate-900 text-center pb-0.5 whitespace-nowrap grow" style="font-size: 8pt;" x-text="quotation.seller?.name || ''"></span>
+                      <!-- Box 2 (Cols D-F): Proposer (Seller) -->
+                      <td colspan="3" class="border-r border-slate-700 px-5 py-2.5 align-top">
+                        <div class="flex flex-col justify-between h-full py-0.5">
+                          <!-- 1. Header Label -->
+                          <div class="font-bold text-slate-900 text-[10pt]">
+                            ผู้เสนอ :
+                          </div>
+
+                          <!-- 2. Seller Name / Signature Underline -->
+                          <div class="w-full flex justify-center py-1">
+                            <span class="border-b border-slate-600 font-bold text-slate-900 text-center pb-0.5 whitespace-nowrap px-3 text-[8.5pt]" x-text="quotation.seller?.name || ''"></span>
+                          </div>
+
+                          <!-- 3. Matching height invisible spacer for perfect vertical balance -->
+                          <div class="w-full text-center text-[9.5pt] invisible" aria-hidden="true">&nbsp;</div>
+
+                          <!-- 4. Document Date - perfectly centered directly under the seller signature line -->
+                          <div class="w-full text-center text-slate-700 whitespace-nowrap text-[9pt] pt-1" x-text="formatDateLong(quotation.docDate)"></div>
                         </div>
                       </td>
-                    </tr>
-
-                    <!-- Row 33: Position & Date Row -->
-                    <tr style="height: 30px;" class="align-middle">
-                      <!-- Box 1 (Cols A-C): Position Line -->
-                      <td colspan="3" class="border-l border-r border-slate-700 px-4">
-                        <div class="flex items-center">
-                          <span class="font-bold text-slate-900 whitespace-nowrap shrink-0 mr-2" style="font-size: 10pt; width: 64px;">ตำแหน่ง :</span>
-                          <span class="border-b border-dotted border-slate-500 grow mb-0.5"></span>
-                        </div>
-                      </td>
-
-                      <!-- Box 2 (Cols D-F): Date Line perfectly centered under Proposer signature line -->
-                      <td colspan="3" class="border-r border-slate-700 px-2.5">
-                        <div class="flex items-center">
-                          <span class="shrink-0 mr-1.5" style="width: 46px;"></span>
-                          <span class="grow text-center text-slate-700 whitespace-nowrap text-[8.5pt]" x-text="formatDateLong(quotation.docDate)"></span>
-                        </div>
-                      </td>
-                    </tr>
-
-                    <!-- Row 34: Parenthesis & Bottom Frame Border -->
-                    <tr style="height: 28px;" class="align-middle border-b border-slate-700">
-                      <!-- Box 1 (Cols A-C): Parenthesis perfectly centered under Approver signature line -->
-                      <td colspan="3" class="border-l border-r border-slate-700 px-4">
-                        <div class="flex items-center">
-                          <span class="shrink-0 mr-2" style="width: 64px;"></span>
-                          <span class="grow text-center text-slate-600 font-normal tracking-wider text-[9.5pt]">(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)</span>
-                        </div>
-                      </td>
-
-                      <!-- Box 2 (Cols D-F): Bottom Border Frame -->
-                      <td colspan="3" class="border-r border-slate-700 px-2.5"></td>
                     </tr>
                   </tfoot>
                 </table>

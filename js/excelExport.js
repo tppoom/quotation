@@ -162,8 +162,8 @@
     ws.getCell('D4').font = fontRegular;
     ws.getCell('D4').alignment = { horizontal: 'left', vertical: 'middle' };
     ws.getCell('F4').value = data.docNo || '';
-    ws.getCell('F4').font = fontBold;
-    ws.getCell('F4').alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
+    ws.getCell('F4').font = { name: 'Angsana New', size: 10, bold: true };
+    ws.getCell('F4').alignment = { horizontal: 'right', vertical: 'middle', shrinkToFit: true };
 
     // Row 5: Customer Address & Date
     ws.getCell('A5').value = 'ที่อยู่  :';
@@ -290,16 +290,16 @@
     ws.getRow(totalRow).height = 21.95;
     ws.mergeCells(`A${totalRow}:C${totalRow}`);
     ws.getCell(`A${totalRow}`).value = data.totalTextThai || '';
-    ws.getCell(`A${totalRow}`).font = fontBold;
-    ws.getCell(`A${totalRow}`).alignment = { horizontal: 'center', vertical: 'middle' };
+    ws.getCell(`A${totalRow}`).font = { name: 'Angsana New', size: 14, bold: true };
+    ws.getCell(`A${totalRow}`).alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
 
     ws.mergeCells(`D${totalRow}:E${totalRow}`);
     ws.getCell(`D${totalRow}`).value = 'รวมเงิน';
-    ws.getCell(`D${totalRow}`).font = fontBold;
+    ws.getCell(`D${totalRow}`).font = { name: 'Angsana New', size: 14, bold: true };
     ws.getCell(`D${totalRow}`).alignment = { horizontal: 'center', vertical: 'middle' };
 
     ws.getCell(`F${totalRow}`).value = { formula: `SUM(F${startRow}:F${endRow})`, result: data.totalAmount || 0 };
-    ws.getCell(`F${totalRow}`).font = fontBold;
+    ws.getCell(`F${totalRow}`).font = { name: 'Angsana New', size: 14, bold: true };
     ws.getCell(`F${totalRow}`).numFmt = '#,##0.00';
     ws.getCell(`F${totalRow}`).alignment = { horizontal: 'right', vertical: 'middle' };
 
@@ -317,29 +317,29 @@
     ws.getRow(sigParenRow).height = 24;
 
     ws.getCell(`A${sigHeaderRow}`).value = 'ผู้อนุมัติ :';
-    ws.getCell(`A${sigHeaderRow}`).font = fontRegular;
+    ws.getCell(`A${sigHeaderRow}`).font = { name: 'Angsana New', size: 14, bold: true };
     ws.getCell(`A${sigHeaderRow}`).alignment = { horizontal: 'left', vertical: 'middle' };
 
     ws.getCell(`D${sigHeaderRow}`).value = '   ผู้เสนอ :';
-    ws.getCell(`D${sigHeaderRow}`).font = { name: 'Sarabun', size: 8 };
+    ws.getCell(`D${sigHeaderRow}`).font = { name: 'Angsana New', size: 9, bold: true };
     ws.getCell(`D${sigHeaderRow}`).alignment = { horizontal: 'left', vertical: 'middle', shrinkToFit: true };
 
     ws.mergeCells(`E${sigHeaderRow}:F${sigHeaderRow}`);
     ws.getCell(`E${sigHeaderRow}`).value = data.seller?.name || '';
-    ws.getCell(`E${sigHeaderRow}`).font = { name: 'Sarabun', size: 8, bold: true };
-    ws.getCell(`E${sigHeaderRow}`).alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
+    ws.getCell(`E${sigHeaderRow}`).font = { name: 'Angsana New', size: 10, bold: true };
+    ws.getCell(`E${sigHeaderRow}`).alignment = { horizontal: 'left', vertical: 'middle', indent: 2, shrinkToFit: true };
 
     ws.getCell(`A${sigPosRow}`).value = 'ตำแหน่ง ';
-    ws.getCell(`A${sigPosRow}`).font = fontRegular;
+    ws.getCell(`A${sigPosRow}`).font = { name: 'Angsana New', size: 14, bold: true };
     ws.getCell(`A${sigPosRow}`).alignment = { horizontal: 'left', vertical: 'middle' };
 
     ws.mergeCells(`E${sigPosRow}:F${sigPosRow}`);
     ws.getCell(`E${sigPosRow}`).value = formatThaiDateLong(data.docDate);
-    ws.getCell(`E${sigPosRow}`).font = { name: 'Sarabun', size: 8.5 };
+    ws.getCell(`E${sigPosRow}`).font = { name: 'Angsana New', size: 13 };
     ws.getCell(`E${sigPosRow}`).alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
 
     ws.getCell(`B${sigParenRow}`).value = '   (                                                                                )';
-    ws.getCell(`B${sigParenRow}`).font = fontRegular;
+    ws.getCell(`B${sigParenRow}`).font = { name: 'CordiaUPC', size: 14 };
     ws.getCell(`B${sigParenRow}`).alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
 
     // =================================================================
