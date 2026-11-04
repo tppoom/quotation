@@ -130,10 +130,11 @@
     ws.getRow(33).height = 21.95;
     ws.getRow(34).height = 24;
 
-    const fontHeader1 = { name: 'Angsana New', size: 22, bold: true };
-    const fontHeader2 = { name: 'Angsana New', size: 16, bold: true };
-    const fontRegular = { name: 'Angsana New', size: 14 };
-    const fontBold = { name: 'Angsana New', size: 14, bold: true };
+    const fontHeader1 = { name: 'Sarabun', size: 16, bold: true };
+    const fontHeader2 = { name: 'Sarabun', size: 12, bold: true };
+    const fontRegular = { name: 'Sarabun', size: 10 };
+    const fontBold = { name: 'Sarabun', size: 10, bold: true };
+    const fontTh = { name: 'Sarabun', size: 9.5, bold: true };
 
     const thin = { style: 'thin', color: { indexed: 64 } };
     const hair = { style: 'hair', color: { indexed: 64 } };
@@ -154,27 +155,29 @@
     ws.mergeCells('A4:C4');
     ws.getCell('A4').value = `เรียน/Attention : ${data.customer?.name || ''}`;
     ws.getCell('A4').font = fontBold;
-    ws.getCell('A4').alignment = { horizontal: 'left', vertical: 'middle' };
+    ws.getCell('A4').alignment = { horizontal: 'left', vertical: 'middle', shrinkToFit: true };
 
     ws.mergeCells('D4:E4');
     ws.getCell('D4').value = 'เลขที่/ No.';
     ws.getCell('D4').font = fontRegular;
-    ws.getCell('D4').alignment = { horizontal: 'left' };
+    ws.getCell('D4').alignment = { horizontal: 'left', vertical: 'middle' };
     ws.getCell('F4').value = data.docNo || '';
     ws.getCell('F4').font = fontBold;
-    ws.getCell('F4').alignment = { horizontal: 'center', vertical: 'middle' };
+    ws.getCell('F4').alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
 
     // Row 5: Customer Address & Date
     ws.getCell('A5').value = 'ที่อยู่  :';
     ws.getCell('A5').font = fontRegular;
+    ws.getCell('A5').alignment = { horizontal: 'left', vertical: 'middle' };
     ws.mergeCells('B5:C5');
     ws.getCell('B5').value = data.customer?.address || '';
     ws.getCell('B5').font = fontRegular;
+    ws.getCell('B5').alignment = { horizontal: 'left', vertical: 'middle', shrinkToFit: true };
 
     ws.mergeCells('D5:E5');
     ws.getCell('D5').value = 'วันที่ Date ';
     ws.getCell('D5').font = fontRegular;
-    ws.getCell('D5').alignment = { horizontal: 'left' };
+    ws.getCell('D5').alignment = { horizontal: 'left', vertical: 'middle' };
     ws.getCell('F5').value = formatThaiDateShort(data.docDate);
     ws.getCell('F5').font = fontRegular;
     ws.getCell('F5').alignment = { horizontal: 'center', vertical: 'middle' };
@@ -182,32 +185,34 @@
     // Row 6: Job Title
     ws.mergeCells('D6:F6');
     ws.getCell('D6').value = data.jobTitle || '';
-    ws.getCell('D6').font = fontBold;
-    ws.getCell('D6').alignment = { horizontal: 'center' };
+    ws.getCell('D6').font = { name: 'Sarabun', size: 10.5, bold: true };
+    ws.getCell('D6').alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
 
     // Row 7: Seller Name
     ws.mergeCells('A7:C7');
     ws.getCell('A7').value = `ชื่อ : ${data.seller?.name || ''}`;
     ws.getCell('A7').font = fontRegular;
+    ws.getCell('A7').alignment = { horizontal: 'left', vertical: 'middle', shrinkToFit: true };
 
     // Row 8: Seller Address & Phone
     ws.mergeCells('A8:C8');
     ws.getCell('A8').value = `ที่อยู่ : ${data.seller?.address || ''}`;
     ws.getCell('A8').font = fontRegular;
+    ws.getCell('A8').alignment = { horizontal: 'left', vertical: 'middle', shrinkToFit: true };
 
     ws.mergeCells('D8:E8');
     ws.getCell('D8').value = data.seller?.tel1 ? `TEL. ${data.seller.tel1}` : '';
     ws.getCell('D8').font = fontRegular;
-    ws.getCell('D8').alignment = { horizontal: 'center' };
+    ws.getCell('D8').alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
     ws.getCell('F8').value = data.seller?.tel2 || '';
     ws.getCell('F8').font = fontRegular;
-    ws.getCell('F8').alignment = { horizontal: 'center', vertical: 'middle' };
+    ws.getCell('F8').alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
 
     // Row 9: Bank Account
     ws.mergeCells('D9:F9');
     ws.getCell('D9').value = data.seller?.bank || '';
     ws.getCell('D9').font = fontRegular;
-    ws.getCell('D9').alignment = { horizontal: 'center' };
+    ws.getCell('D9').alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
 
     // Table Header: Row 10 & 11
     ws.getCell('A10').value = 'ลำดับที่';
@@ -223,9 +228,10 @@
     const thCells = ['A10', 'B10', 'C10', 'D10', 'E10', 'F10', 'A11', 'B11'];
     thCells.forEach(ref => {
       const c = ws.getCell(ref);
-      c.font = fontBold;
-      c.alignment = { horizontal: 'center', vertical: 'middle' };
+      c.font = fontTh;
+      c.alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
     });
+    ws.getCell('E10').alignment = { horizontal: 'center', vertical: 'middle', wrapText: true, shrinkToFit: true };
 
     // Merge C10:C11, D10:D11, E10:E11, F10:F11 with independent top and bottom borders
     // Using mergeCellsWithoutStyle guarantees the top border is not overwritten by the bottom cell
@@ -312,27 +318,29 @@
 
     ws.getCell(`A${sigHeaderRow}`).value = 'ผู้อนุมัติ :';
     ws.getCell(`A${sigHeaderRow}`).font = fontRegular;
+    ws.getCell(`A${sigHeaderRow}`).alignment = { horizontal: 'left', vertical: 'middle' };
 
     ws.getCell(`D${sigHeaderRow}`).value = '   ผู้เสนอ :';
-    ws.getCell(`D${sigHeaderRow}`).font = fontRegular;
-    ws.getCell(`D${sigHeaderRow}`).alignment = { horizontal: 'left' };
+    ws.getCell(`D${sigHeaderRow}`).font = { name: 'Sarabun', size: 8 };
+    ws.getCell(`D${sigHeaderRow}`).alignment = { horizontal: 'left', vertical: 'middle', shrinkToFit: true };
 
     ws.mergeCells(`E${sigHeaderRow}:F${sigHeaderRow}`);
     ws.getCell(`E${sigHeaderRow}`).value = data.seller?.name || '';
-    ws.getCell(`E${sigHeaderRow}`).font = fontBold;
-    ws.getCell(`E${sigHeaderRow}`).alignment = { horizontal: 'center' };
+    ws.getCell(`E${sigHeaderRow}`).font = { name: 'Sarabun', size: 8, bold: true };
+    ws.getCell(`E${sigHeaderRow}`).alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
 
     ws.getCell(`A${sigPosRow}`).value = 'ตำแหน่ง ';
     ws.getCell(`A${sigPosRow}`).font = fontRegular;
+    ws.getCell(`A${sigPosRow}`).alignment = { horizontal: 'left', vertical: 'middle' };
 
     ws.mergeCells(`E${sigPosRow}:F${sigPosRow}`);
     ws.getCell(`E${sigPosRow}`).value = formatThaiDateLong(data.docDate);
-    ws.getCell(`E${sigPosRow}`).font = fontRegular;
-    ws.getCell(`E${sigPosRow}`).alignment = { horizontal: 'center' };
+    ws.getCell(`E${sigPosRow}`).font = { name: 'Sarabun', size: 8.5 };
+    ws.getCell(`E${sigPosRow}`).alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
 
     ws.getCell(`B${sigParenRow}`).value = '   (                                                                                )';
     ws.getCell(`B${sigParenRow}`).font = fontRegular;
-    ws.getCell(`B${sigParenRow}`).alignment = { horizontal: 'center' };
+    ws.getCell(`B${sigParenRow}`).alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
 
     // =================================================================
     // 100% COMPLETE TABLE & FRAME BORDER RULES (Rows 3 to sigParenRow)
@@ -422,33 +430,36 @@
     });
 
     // 9. Signatures Table Frame
+    ws.mergeCellsWithoutStyle(`A${sigSpacerRow}:C${sigSpacerRow}`);
     ws.getCell(`A${sigSpacerRow}`).border = { top: thin, left: thin, right: thin };
-    ws.getCell(`B${sigSpacerRow}`).border = { top: thin, left: thin, right: thin };
-    ws.getCell(`C${sigSpacerRow}`).border = { top: thin, left: thin, right: thin };
-    ws.getCell(`F${sigSpacerRow}`).border = { right: thin };
+    ws.getCell(`B${sigSpacerRow}`).border = { top: thin };
+    ws.getCell(`C${sigSpacerRow}`).border = { top: thin, right: thin };
+    ws.getCell(`D${sigSpacerRow}`).border = { top: thin, left: thin };
+    ws.getCell(`E${sigSpacerRow}`).border = { top: thin };
+    ws.getCell(`F${sigSpacerRow}`).border = { top: thin, right: thin };
 
     ws.getCell(`A${sigEmptyRow}`).border = { left: thin };
     ws.getCell(`C${sigEmptyRow}`).border = { right: thin };
     ws.getCell(`D${sigEmptyRow}`).border = { left: thin };
-    ws.getCell(`E${sigEmptyRow}`).border = { right: thin };
     ws.getCell(`F${sigEmptyRow}`).border = { right: thin };
 
     ws.getCell(`A${sigHeaderRow}`).border = { left: thin };
-    ws.getCell(`C${sigHeaderRow}`).border = { right: thin };
+    ws.getCell(`B${sigHeaderRow}`).border = { bottom: hair };
+    ws.getCell(`C${sigHeaderRow}`).border = { bottom: hair, right: thin };
     ws.getCell(`D${sigHeaderRow}`).border = { left: thin };
-    ws.getCell(`E${sigHeaderRow}`).border = { bottom: hair, right: thin };
+    ws.getCell(`E${sigHeaderRow}`).border = { bottom: hair };
     ws.getCell(`F${sigHeaderRow}`).border = { bottom: hair, right: thin };
 
     ws.getCell(`A${sigPosRow}`).border = { left: thin };
     ws.getCell(`B${sigPosRow}`).border = { top: hair, bottom: hair };
     ws.getCell(`C${sigPosRow}`).border = { right: thin };
     ws.getCell(`D${sigPosRow}`).border = { left: thin };
-    ws.getCell(`E${sigPosRow}`).border = { right: thin };
+    ws.getCell(`E${sigPosRow}`).border = {};
     ws.getCell(`F${sigPosRow}`).border = { right: thin };
 
     ws.getCell(`A${sigParenRow}`).border = { bottom: thin, left: thin };
     ws.getCell(`B${sigParenRow}`).border = { bottom: thin };
-    ws.getCell(`C${sigParenRow}`).border = { bottom: thin };
+    ws.getCell(`C${sigParenRow}`).border = { bottom: thin, right: thin };
     ws.getCell(`D${sigParenRow}`).border = { bottom: thin, left: thin };
     ws.getCell(`E${sigParenRow}`).border = { bottom: thin };
     ws.getCell(`F${sigParenRow}`).border = { bottom: thin, right: thin };

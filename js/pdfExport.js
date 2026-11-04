@@ -167,21 +167,64 @@
     const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
     const pageHeight = pdf.internal.pageSize.getHeight ? pdf.internal.pageSize.getHeight() : 297;
 
-    if (pdfHeight > (pageHeight + 2) && typeof pdf.addPage === 'function') {
-      let heightLeft = pdfHeight;
-      let position = 0;
-
-      pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight, undefined, 'FAST');
-      heightLeft -= pageHeight;
-
-      while (heightLeft > 0) {
-        position -= pageHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight, undefined, 'FAST');
-        heightLeft -= pageHeight;
-      }
-    } else {
+    // If within 15% of 1 page, fit cleanly onto 1 A4 page (matching Excel fitToPage behavior)
+    if (typeof pdf.addPage === 'function' && pdfHeight > pageHeight && pdfHeight <= (pageHeight * 1.15)) {
+      const scale = pageHeight / pdfHeight;
+      const scaledWidth = pdfWidth * scale;
+      const offsetX = (pdfWidth - scaledWidth) / 2;
+      pdf.addImage(imgData, 'PNG', offsetX, 0, scaledWidth, pageHeight, undefined, 'FAST');
+    } else if (pdfHeight <= pageHeight || typeof pdf.addPage !== 'function') {
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
+    } else {
+      // Multi-page document: Smart row boundary splitting
+      const tableRows = el.querySelectorAll ? el.querySelectorAll('tbody tr') : [];
+      const elOffsetHeight = el.offsetHeight || 1123;
+      const targetPage1Pixels = (pageHeight - 20) * (el.offsetWidth || 794) / pdfWidth;
+      let splitOffset = targetPage1Pixels;
+
+      for (let i = 0; i < tableRows.length; i++) {
+        const row = tableRows[i];
+        const rowBottom = (row.offsetTop || 0) + (row.offsetHeight || 0);
+        if (rowBottom <= targetPage1Pixels) {
+          splitOffset = rowBottom;
+        } else {
+          break;
+        }
+      }
+
+      const canvasScale = canvas.height / elOffsetHeight;
+      const splitCanvasY = Math.round(splitOffset * canvasScale);
+
+      // Create Page 1 Canvas
+      const page1Canvas = doc.createElement('canvas');
+      page1Canvas.width = canvas.width;
+      page1Canvas.height = splitCanvasY;
+      const ctx1 = page1Canvas.getContext('2d');
+      if (ctx1) {
+        ctx1.fillStyle = '#ffffff';
+        ctx1.fillRect(0, 0, page1Canvas.width, page1Canvas.height);
+        ctx1.drawImage(canvas, 0, 0, canvas.width, splitCanvasY, 0, 0, canvas.width, splitCanvasY);
+      }
+
+      const page1Img = page1Canvas.toDataURL('image/png');
+      const page1HeightMm = (splitCanvasY * pdfWidth) / canvas.width;
+      pdf.addImage(page1Img, 'PNG', 0, 0, pdfWidth, page1HeightMm, undefined, 'FAST');
+
+      // Create Page 2 Canvas
+      pdf.addPage();
+      const page2Canvas = doc.createElement('canvas');
+      page2Canvas.width = canvas.width;
+      page2Canvas.height = canvas.height - splitCanvasY;
+      const ctx2 = page2Canvas.getContext('2d');
+      if (ctx2) {
+        ctx2.fillStyle = '#ffffff';
+        ctx2.fillRect(0, 0, page2Canvas.width, page2Canvas.height);
+        ctx2.drawImage(canvas, 0, splitCanvasY, canvas.width, canvas.height - splitCanvasY, 0, 0, canvas.width, page2Canvas.height);
+      }
+
+      const page2Img = page2Canvas.toDataURL('image/png');
+      const page2HeightMm = ((canvas.height - splitCanvasY) * pdfWidth) / canvas.width;
+      pdf.addImage(page2Img, 'PNG', 0, 0, pdfWidth, Math.min(pageHeight, page2HeightMm), undefined, 'FAST');
     }
     const safeFilename = filename || 'quotation';
     pdf.save(safeFilename.endsWith('.pdf') ? safeFilename : `${safeFilename}.pdf`);
