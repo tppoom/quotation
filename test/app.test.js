@@ -147,6 +147,18 @@ async function runTests() {
   assert.strictEqual(reindexedItems[0].itemNo, '1', 'Remaining first item should re-index to 1');
   assert.strictEqual(reindexedItems[1].itemNo, '2', 'Remaining second item should re-index to 2');
 
+  // Test smart unit inheritance and row duplication
+  reindexedItems[1].unit = 'ตร.ม.';
+  rowApp.addItemRow();
+  const inheritedItem = rowApp.quotation.items[rowApp.quotation.items.length - 1];
+  assert.strictEqual(inheritedItem.unit, 'ตร.ม.', 'Newly added item should inherit previous row unit');
+
+  const beforeDupCount = rowApp.quotation.items.length;
+  rowApp.duplicateItemRow(rowApp.quotation.items.length - 1);
+  assert.strictEqual(rowApp.quotation.items.length, beforeDupCount + 1, 'duplicateItemRow should add 1 row');
+  const duplicatedItem = rowApp.quotation.items[rowApp.quotation.items.length - 1];
+  assert.strictEqual(duplicatedItem.unit, 'ตร.ม.', 'Duplicated item should match source unit');
+
   // =========================================================================
   // 5. Total Calculations and Thai Baht Text
   // =========================================================================

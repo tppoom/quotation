@@ -366,17 +366,46 @@
         }
         const currentItems = this.quotation.items.filter(i => i.type === 'item');
         const nextNo = currentItems.length + 1;
+
+        // Auto-inherit unit from the latest item row that has a unit defined
+        let defaultUnit = 'ชุด';
+        for (let i = this.quotation.items.length - 1; i >= 0; i--) {
+          const it = this.quotation.items[i];
+          if (it && it.type === 'item' && it.unit && String(it.unit).trim()) {
+            defaultUnit = String(it.unit).trim();
+            break;
+          }
+        }
+
         this.quotation.items.push({
           id: 'row_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
           type: 'item',
           itemNo: String(nextNo),
           description: '',
-          unit: 'ชุด',
+          unit: defaultUnit,
           qty: 1,
           unitPrice: 0,
           amount: 0
         });
         this.calculateTotals();
+      },
+
+      duplicateItemRow(index) {
+        if (!Array.isArray(this.quotation.items)) return;
+        const target = this.quotation.items[index];
+        if (!target) return;
+        const clone = JSON.parse(JSON.stringify(target));
+        clone.id = 'row_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+        this.quotation.items.splice(index + 1, 0, clone);
+        // Re-index main item numbers
+        let counter = 1;
+        this.quotation.items.forEach(it => {
+          if (it && it.type === 'item') {
+            it.itemNo = String(counter++);
+          }
+        });
+        this.calculateTotals();
+        this.flashNotice('📋 คัดลอกรายการเรียบร้อยแล้ว');
       },
 
       addSubItemRow() {
