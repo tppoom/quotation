@@ -62,10 +62,10 @@
     }
 
     #quotation-preview table tbody td {
-      vertical-align: middle;
-      padding-top: 2px;
-      padding-bottom: 5px;
-      line-height: 1.25;
+      vertical-align: middle !important;
+      padding-top: 3px !important;
+      padding-bottom: 3px !important;
+      line-height: 1.35;
     }
 
     /* Print Stylesheet for Pristine 1-Page A4 Printing */
@@ -1108,28 +1108,32 @@
                     <col style="width: 12.5%;" />  <!-- Col F: จำนวนเงิน (10.25) -->
                   </colgroup>
 
-                  <!-- Table Header: Perfectly Centered & Balanced Single Row (Height 44px) -->
+                  <!-- Table Header: Perfectly Centered & Balanced Single Row (Height 46px) -->
                   <thead>
-                    <tr class="border-t border-b border-slate-700 font-bold text-center bg-white" style="height: 44px;">
-                      <th class="border-t border-l border-r border-b border-slate-700 py-1 px-1 font-bold text-center align-middle">
-                        <div class="text-[9.5pt] leading-tight">ลำดับที่</div>
-                        <div class="text-[7.5pt] font-semibold tracking-wider text-slate-600 leading-tight mt-0.5">ITEM</div>
+                    <tr class="border-t border-b border-slate-700 font-bold text-center bg-white" style="height: 46px;">
+                      <th class="border-t border-l border-r border-b border-slate-700 px-1 pt-2 pb-2 text-center align-middle">
+                        <div class="flex flex-col items-center justify-center h-full">
+                          <span class="text-[9.5pt] leading-none font-bold">ลำดับที่</span>
+                          <span class="text-[7.5pt] font-semibold tracking-wider text-slate-600 leading-none mt-1">ITEM</span>
+                        </div>
                       </th>
-                      <th class="border-t border-l border-r border-b border-slate-700 py-1 px-2 font-bold text-center align-middle">
-                        <div class="text-[10pt] leading-tight">รายการ</div>
-                        <div class="text-[7.5pt] font-semibold tracking-wider text-slate-600 leading-tight mt-0.5">DESCRIPTION</div>
+                      <th class="border-t border-l border-r border-b border-slate-700 px-2 pt-2 pb-2 text-center align-middle">
+                        <div class="flex flex-col items-center justify-center h-full">
+                          <span class="text-[10pt] leading-none font-bold">รายการ</span>
+                          <span class="text-[7.5pt] font-semibold tracking-wider text-slate-600 leading-none mt-1">DESCRIPTION</span>
+                        </div>
                       </th>
-                      <th class="border-t border-l border-r border-b border-slate-700 py-1 px-1 font-bold text-center align-middle text-[10pt]">
-                        <div>หน่วย</div>
+                      <th class="border-t border-l border-r border-b border-slate-700 px-1 pt-2 pb-2 font-bold text-center align-middle text-[10pt]">
+                        <span class="leading-none inline-block">หน่วย</span>
                       </th>
-                      <th class="border-t border-l border-r border-b border-slate-700 py-1 px-1 font-bold text-center align-middle text-[10pt]">
-                        <div>จำนวน</div>
+                      <th class="border-t border-l border-r border-b border-slate-700 px-1 pt-2 pb-2 font-bold text-center align-middle text-[10pt]">
+                        <span class="leading-none inline-block">จำนวน</span>
                       </th>
-                      <th class="border-t border-l border-r border-b border-slate-700 py-1 px-1 font-bold text-center align-middle text-[9.5pt]">
-                        <div>ราคา/หน่วย</div>
+                      <th class="border-t border-l border-r border-b border-slate-700 px-1 pt-2 pb-2 font-bold text-center align-middle text-[9.5pt]">
+                        <span class="leading-none inline-block">ราคา/หน่วย</span>
                       </th>
-                      <th class="border-t border-l border-r border-b border-slate-700 py-1 px-1 font-bold text-center align-middle text-[10pt]">
-                        <div>จำนวนเงิน</div>
+                      <th class="border-t border-l border-r border-b border-slate-700 px-1 pt-2 pb-2 font-bold text-center align-middle text-[10pt]">
+                        <span class="leading-none inline-block">จำนวนเงิน</span>
                       </th>
                     </tr>
                   </thead>
@@ -1204,22 +1208,22 @@
                       <!-- Box 1 (Cols A-C): Approver (Customer) -->
                       <td colspan="3" class="border-l border-r border-slate-700 px-3.5 py-3 align-top">
                         <div class="flex flex-col justify-between h-full">
-                          <!-- Tier 1: Approver label + signing dotted line inline -->
-                          <div class="flex items-center text-slate-900 font-bold text-[9.5pt]">
-                            <span class="w-[66px] shrink-0 font-bold">ผู้อนุมัติ :</span>
-                            <span class="border-b-2 border-dotted border-slate-400 grow mb-0.5"></span>
+                          <!-- Tier 1: Approver label + signing dotted line aligned to baseline -->
+                          <div class="flex items-baseline text-slate-900 font-bold text-[9.5pt]">
+                            <span class="w-[64px] shrink-0 font-bold">ผู้อนุมัติ :</span>
+                            <span class="border-b border-dotted border-slate-600 grow mb-[3px]"></span>
                           </div>
 
-                          <!-- Tier 2: Parentheses centered for printed name directly under signing line -->
+                          <!-- Tier 2: Parentheses centered directly under signing line -->
                           <div class="flex items-center text-[9pt]">
-                            <span class="w-[66px] shrink-0"></span>
-                            <span class="grow text-center text-slate-500 font-normal tracking-widest">(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)</span>
+                            <span class="w-[64px] shrink-0"></span>
+                            <span class="grow text-center text-slate-500 font-normal tracking-wide">(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)</span>
                           </div>
 
-                          <!-- Tier 3: Approver Position Line -->
-                          <div class="flex items-center text-slate-900 font-bold text-[9.5pt]">
-                            <span class="w-[66px] shrink-0 font-bold">ตำแหน่ง :</span>
-                            <span class="border-b-2 border-dotted border-slate-400 grow mb-0.5"></span>
+                          <!-- Tier 3: Approver Position Line aligned to baseline -->
+                          <div class="flex items-baseline text-slate-900 font-bold text-[9.5pt]">
+                            <span class="w-[64px] shrink-0 font-bold">ตำแหน่ง :</span>
+                            <span class="border-b border-dotted border-slate-600 grow mb-[3px]"></span>
                           </div>
                         </div>
                       </td>
@@ -1227,22 +1231,24 @@
                       <!-- Box 2 (Cols D-F): Proposer (Seller) -->
                       <td colspan="3" class="border-r border-slate-700 px-3.5 py-3 align-top">
                         <div class="flex flex-col justify-between h-full">
-                          <!-- Tier 1: Proposer label + signing dotted line inline -->
-                          <div class="flex items-center text-slate-900 font-bold text-[9.5pt]">
+                          <!-- Tier 1: Proposer label + signing dotted line aligned to baseline -->
+                          <div class="flex items-baseline text-slate-900 font-bold text-[9.5pt]">
                             <span class="w-[58px] shrink-0 font-bold">ผู้เสนอ :</span>
-                            <span class="border-b-2 border-dotted border-slate-400 grow mb-0.5"></span>
+                            <span class="border-b border-dotted border-slate-600 grow mb-[3px]"></span>
                           </div>
 
                           <!-- Tier 2: Seller printed name in parentheses centered directly under signing line -->
                           <div class="flex items-center text-[9pt]">
                             <span class="w-[58px] shrink-0"></span>
-                            <span class="grow text-center text-slate-800 font-medium tracking-tight" x-text="'( ' + (quotation.seller?.name || '') + ' )'"></span>
+                            <span class="grow text-center text-slate-900 font-medium tracking-tight"
+                                  :class="(quotation.seller?.name || '').length > 25 ? 'text-[8pt]' : 'text-[9pt]'"
+                                  x-text="'( ' + (quotation.seller?.name || '') + ' )'"></span>
                           </div>
 
                           <!-- Tier 3: Document Date centered under proposer signature -->
-                          <div class="flex items-center text-[9pt]">
+                          <div class="flex items-baseline text-[9pt]">
                             <span class="w-[58px] shrink-0 font-bold text-slate-900 text-[9.5pt]">วันที่ :</span>
-                            <span class="grow text-center text-slate-700" x-text="formatDateLong(quotation.docDate)"></span>
+                            <span class="grow text-center text-slate-700 font-normal" x-text="formatDateLong(quotation.docDate)"></span>
                           </div>
                         </div>
                       </td>

@@ -138,19 +138,21 @@ async function runTests() {
   });
   assert.strictEqual(ws.getCell('F28').numFmt, '#,##0.00');
 
-  // Verify Signatures
+  // Verify Signatures (Clean 3-Tier Symmetrical Structure)
   assert.strictEqual(ws.getCell('A31').value, 'ผู้อนุมัติ :');
   assert.strictEqual(ws.getCell('D31').value, '   ผู้เสนอ :');
-  assert.strictEqual(ws.getCell('E31').value, 'นายสมชาย ใจดี');
-  assert.strictEqual(ws.getCell('A32').value, 'ตำแหน่ง ');
-  assert.strictEqual(ws.getCell('E32').value, '3 พฤศจิกายน 2569');
-  assert.strictEqual(ws.getCell('B33').value, '   (                                                                                )');
+  assert.strictEqual(ws.getCell('B32').value, '(                                            )');
+  assert.strictEqual(ws.getCell('E32').value, '( นายสมชาย ใจดี )');
+  assert.strictEqual(ws.getCell('A33').value, 'ตำแหน่ง :');
+  assert.strictEqual(ws.getCell('D33').value, '   วันที่ :');
+  assert.strictEqual(ws.getCell('E33').value, '3 พฤศจิกายน 2569');
 
   // Verify Merges
   const merges = ws.model.merges;
   const expectedMerges = [
     'A1:F1', 'A2:F2', 'A3:C3', 'D3:E3', 'B4:C4', 'D4:E4', 'D5:F5',
-    'A6:C6', 'A7:C7', 'D7:E7', 'D8:F8', 'A28:C28', 'D28:E28', 'E31:F31', 'E32:F32',
+    'A6:C6', 'A7:C7', 'D7:E7', 'D8:F8', 'A28:C28', 'D28:E28',
+    'B32:C32', 'E32:F32', 'E33:F33',
     'C9:C10', 'D9:D10', 'E9:E10', 'F9:F10'
   ];
   expectedMerges.forEach(mergeRange => {

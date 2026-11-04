@@ -248,15 +248,17 @@ async function runE2ETests() {
   assert.strictEqual(genWs.getCell('D28').value, 'รวมเงิน');
   assert.strictEqual(genWs.getCell('A31').value, 'ผู้อนุมัติ :');
   assert.strictEqual(genWs.getCell('D31').value, '   ผู้เสนอ :');
-  assert.strictEqual(genWs.getCell('A32').value, 'ตำแหน่ง ');
-  assert.strictEqual(genWs.getCell('B33').value, '   (                                                                                )');
+  assert.strictEqual(genWs.getCell('B32').value, '(                                            )');
+  assert.strictEqual(genWs.getCell('A33').value, 'ตำแหน่ง :');
+  assert.strictEqual(genWs.getCell('D33').value, '   วันที่ :');
   console.log('  ✓ Header texts and labels match template 100%.');
 
   // 6.4 Verify Merged Cell Ranges
   const genMerges = genWs.model.merges;
   const criticalMerges = [
     'A1:F1', 'A2:F2', 'A3:C3', 'D3:E3', 'B4:C4', 'D4:E4', 'D5:F5',
-    'A6:C6', 'A7:C7', 'D7:E7', 'D8:F8', 'A28:C28', 'D28:E28', 'E31:F31', 'E32:F32',
+    'A6:C6', 'A7:C7', 'D7:E7', 'D8:F8', 'A28:C28', 'D28:E28',
+    'B32:C32', 'E32:F32', 'E33:F33',
     'C9:C10', 'D9:D10', 'E9:E10', 'F9:F10'
   ];
   criticalMerges.forEach(mergeRange => {

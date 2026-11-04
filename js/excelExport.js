@@ -302,45 +302,62 @@
     ws.getCell(`F${totalRow}`).numFmt = '#,##0.00';
     ws.getCell(`F${totalRow}`).alignment = { horizontal: 'right', vertical: 'middle' };
 
-    // Dynamic Signature Rows
+    // Dynamic Signature Rows (Clean 3-Tier Symmetrical Structure matching reference template)
     const sigSpacerRow = totalRow + 1;
     const sigEmptyRow = totalRow + 2;
-    const sigHeaderRow = totalRow + 3;
-    const sigPosRow = totalRow + 4;
-    const sigParenRow = totalRow + 5;
+    const sigTier1Row = totalRow + 3;
+    const sigTier2Row = totalRow + 4;
+    const sigTier3Row = totalRow + 5;
 
     ws.getRow(sigSpacerRow).height = 20.25;
     ws.getRow(sigEmptyRow).height = 11.25;
-    ws.getRow(sigHeaderRow).height = 24;
-    ws.getRow(sigPosRow).height = 21.95;
-    ws.getRow(sigParenRow).height = 24;
+    ws.getRow(sigTier1Row).height = 24;
+    ws.getRow(sigTier2Row).height = 21.95;
+    ws.getRow(sigTier3Row).height = 24;
 
-    ws.getCell(`A${sigHeaderRow}`).value = 'ผู้อนุมัติ :';
-    ws.getCell(`A${sigHeaderRow}`).font = { name: 'Angsana New', size: 14, bold: true };
-    ws.getCell(`A${sigHeaderRow}`).alignment = { horizontal: 'left', vertical: 'middle' };
+    // Font definitions
+    const fontSigLabel = { name: 'Angsana New', size: 14, bold: true };
+    const fontSigBody = { name: 'Angsana New', size: 13 };
 
-    ws.getCell(`D${sigHeaderRow}`).value = '   ผู้เสนอ :';
-    ws.getCell(`D${sigHeaderRow}`).font = { name: 'Angsana New', size: 12, bold: true };
-    ws.getCell(`D${sigHeaderRow}`).alignment = { horizontal: 'left', vertical: 'middle', shrinkToFit: true };
+    // Tier 1 (Row 31): Signing Line (Approver left, Proposer right)
+    ws.getCell(`A${sigTier1Row}`).value = 'ผู้อนุมัติ :';
+    ws.getCell(`A${sigTier1Row}`).font = fontSigLabel;
+    ws.getCell(`A${sigTier1Row}`).alignment = { horizontal: 'left', vertical: 'middle' };
 
-    ws.mergeCells(`E${sigHeaderRow}:F${sigHeaderRow}`);
-    ws.getCell(`E${sigHeaderRow}`).value = data.seller?.name || '';
-    const sellerNameLen = (data.seller?.name || '').length;
-    ws.getCell(`E${sigHeaderRow}`).font = { name: 'Angsana New', size: sellerNameLen > 25 ? 10 : sellerNameLen > 18 ? 11 : 13, bold: true };
-    ws.getCell(`E${sigHeaderRow}`).alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
+    ws.getCell(`D${sigTier1Row}`).value = '   ผู้เสนอ :';
+    ws.getCell(`D${sigTier1Row}`).font = fontSigLabel;
+    ws.getCell(`D${sigTier1Row}`).alignment = { horizontal: 'left', vertical: 'middle', shrinkToFit: true };
 
-    ws.getCell(`A${sigPosRow}`).value = 'ตำแหน่ง ';
-    ws.getCell(`A${sigPosRow}`).font = { name: 'Angsana New', size: 14, bold: true };
-    ws.getCell(`A${sigPosRow}`).alignment = { horizontal: 'left', vertical: 'middle' };
+    // Tier 2 (Row 32): Printed Names in Parentheses centered directly under signing lines
+    ws.mergeCells(`B${sigTier2Row}:C${sigTier2Row}`);
+    ws.getCell(`B${sigTier2Row}`).value = '(                                            )';
+    ws.getCell(`B${sigTier2Row}`).font = fontSigBody;
+    ws.getCell(`B${sigTier2Row}`).alignment = { horizontal: 'center', vertical: 'middle' };
 
-    ws.mergeCells(`E${sigPosRow}:F${sigPosRow}`);
-    ws.getCell(`E${sigPosRow}`).value = formatThaiDateLong(data.docDate);
-    ws.getCell(`E${sigPosRow}`).font = { name: 'Angsana New', size: 13 };
-    ws.getCell(`E${sigPosRow}`).alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
+    ws.mergeCells(`E${sigTier2Row}:F${sigTier2Row}`);
+    const sellerDisplayName = `( ${data.seller?.name || ''} )`;
+    const sellerLen = sellerDisplayName.length;
+    ws.getCell(`E${sigTier2Row}`).value = sellerDisplayName;
+    ws.getCell(`E${sigTier2Row}`).font = {
+      name: 'Angsana New',
+      size: sellerLen > 30 ? 10 : sellerLen > 22 ? 11 : 13,
+      bold: true
+    };
+    ws.getCell(`E${sigTier2Row}`).alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
 
-    ws.getCell(`B${sigParenRow}`).value = '   (                                                                                )';
-    ws.getCell(`B${sigParenRow}`).font = { name: 'CordiaUPC', size: 14 };
-    ws.getCell(`B${sigParenRow}`).alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
+    // Tier 3 (Row 33): Position & Document Date
+    ws.getCell(`A${sigTier3Row}`).value = 'ตำแหน่ง :';
+    ws.getCell(`A${sigTier3Row}`).font = fontSigLabel;
+    ws.getCell(`A${sigTier3Row}`).alignment = { horizontal: 'left', vertical: 'middle' };
+
+    ws.getCell(`D${sigTier3Row}`).value = '   วันที่ :';
+    ws.getCell(`D${sigTier3Row}`).font = fontSigLabel;
+    ws.getCell(`D${sigTier3Row}`).alignment = { horizontal: 'left', vertical: 'middle', shrinkToFit: true };
+
+    ws.mergeCells(`E${sigTier3Row}:F${sigTier3Row}`);
+    ws.getCell(`E${sigTier3Row}`).value = formatThaiDateLong(data.docDate);
+    ws.getCell(`E${sigTier3Row}`).font = fontSigBody;
+    ws.getCell(`E${sigTier3Row}`).alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
 
     // =================================================================
     // 100% COMPLETE TABLE & FRAME BORDER RULES (Rows 3 to sigParenRow)
@@ -429,43 +446,47 @@
       ws.getCell(`${col}${totalRow}`).border = { top: thin, bottom: thin, left: thin, right: thin };
     });
 
-    // 9. Signatures Table Frame
-    ws.mergeCellsWithoutStyle(`A${sigSpacerRow}:C${sigSpacerRow}`);
-    ws.getCell(`A${sigSpacerRow}`).border = { top: thin, left: thin, right: thin };
+    // 9. Signatures Table Frame (Rows sigSpacerRow to sigTier3Row)
+    // Spacer row: top border from table
+    ws.getCell(`A${sigSpacerRow}`).border = { top: thin, left: thin };
     ws.getCell(`B${sigSpacerRow}`).border = { top: thin };
     ws.getCell(`C${sigSpacerRow}`).border = { top: thin, right: thin };
     ws.getCell(`D${sigSpacerRow}`).border = { top: thin, left: thin };
     ws.getCell(`E${sigSpacerRow}`).border = { top: thin };
     ws.getCell(`F${sigSpacerRow}`).border = { top: thin, right: thin };
 
+    // Empty Row sigEmptyRow
     ws.getCell(`A${sigEmptyRow}`).border = { left: thin };
     ws.getCell(`C${sigEmptyRow}`).border = { right: thin };
     ws.getCell(`D${sigEmptyRow}`).border = { left: thin };
     ws.getCell(`F${sigEmptyRow}`).border = { right: thin };
 
-    ws.getCell(`A${sigHeaderRow}`).border = { left: thin };
-    ws.getCell(`B${sigHeaderRow}`).border = { bottom: hair };
-    ws.getCell(`C${sigHeaderRow}`).border = { bottom: hair, right: thin };
-    ws.getCell(`D${sigHeaderRow}`).border = { left: thin };
-    ws.getCell(`E${sigHeaderRow}`).border = { bottom: hair };
-    ws.getCell(`F${sigHeaderRow}`).border = { bottom: hair, right: thin };
+    // Tier 1: Signing lines
+    ws.getCell(`A${sigTier1Row}`).border = { left: thin };
+    ws.getCell(`B${sigTier1Row}`).border = { bottom: hair };
+    ws.getCell(`C${sigTier1Row}`).border = { bottom: hair, right: thin };
+    ws.getCell(`D${sigTier1Row}`).border = { left: thin };
+    ws.getCell(`E${sigTier1Row}`).border = { bottom: hair };
+    ws.getCell(`F${sigTier1Row}`).border = { bottom: hair, right: thin };
 
-    ws.getCell(`A${sigPosRow}`).border = { left: thin };
-    ws.getCell(`B${sigPosRow}`).border = { top: hair, bottom: hair };
-    ws.getCell(`C${sigPosRow}`).border = { right: thin };
-    ws.getCell(`D${sigPosRow}`).border = { left: thin };
-    ws.getCell(`E${sigPosRow}`).border = {};
-    ws.getCell(`F${sigPosRow}`).border = { right: thin };
+    // Tier 2: Parentheses (No bottom border, keeps text clean)
+    ws.getCell(`A${sigTier2Row}`).border = { left: thin };
+    ws.getCell(`B${sigTier2Row}`).border = {};
+    ws.getCell(`C${sigTier2Row}`).border = { right: thin };
+    ws.getCell(`D${sigTier2Row}`).border = { left: thin };
+    ws.getCell(`E${sigTier2Row}`).border = {};
+    ws.getCell(`F${sigTier2Row}`).border = { right: thin };
 
-    ws.getCell(`A${sigParenRow}`).border = { bottom: thin, left: thin };
-    ws.getCell(`B${sigParenRow}`).border = { bottom: thin };
-    ws.getCell(`C${sigParenRow}`).border = { bottom: thin, right: thin };
-    ws.getCell(`D${sigParenRow}`).border = { bottom: thin, left: thin };
-    ws.getCell(`E${sigParenRow}`).border = { bottom: thin };
-    ws.getCell(`F${sigParenRow}`).border = { bottom: thin, right: thin };
+    // Tier 3: Position line on left, Date on right, continuous bottom border of frame
+    ws.getCell(`A${sigTier3Row}`).border = { left: thin, bottom: thin };
+    ws.getCell(`B${sigTier3Row}`).border = { bottom: thin };
+    ws.getCell(`C${sigTier3Row}`).border = { right: thin, bottom: thin };
+    ws.getCell(`D${sigTier3Row}`).border = { left: thin, bottom: thin };
+    ws.getCell(`E${sigTier3Row}`).border = { bottom: thin };
+    ws.getCell(`F${sigTier3Row}`).border = { right: thin, bottom: thin };
 
     // Dynamic Page Setup Print Area
-    ws.pageSetup.printArea = `A1:F${sigParenRow}`;
+    ws.pageSetup.printArea = `A1:F${sigTier3Row}`;
     if (items.length > 17) {
       ws.pageSetup.fitToHeight = 0;
     }
