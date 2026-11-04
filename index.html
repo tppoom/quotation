@@ -1108,19 +1108,29 @@
                     <col style="width: 12.5%;" />  <!-- Col F: จำนวนเงิน (10.25) -->
                   </colgroup>
 
-                  <!-- Row 10 & 11: Two-Tier Header with 100% complete border frame -->
+                  <!-- Table Header: Perfectly Centered & Balanced Single Row (Height 44px) -->
                   <thead>
-                    <tr class="border-t border-slate-700 font-bold text-center" style="height: 24px;">
-                      <th class="border-t border-l border-r border-slate-700 pt-1.5 pb-0.5 px-1 font-bold text-center align-middle" style="font-size: 9.5pt; line-height: 1.2;">ลำดับที่</th>
-                      <th class="border-t border-l border-r border-slate-700 pt-1.5 pb-0.5 px-2 font-bold text-center align-middle" style="font-size: 10pt; line-height: 1.2;">รายการ</th>
-                      <th rowspan="2" class="border-t border-l border-r border-b border-slate-700 py-1 px-1 font-bold text-center align-middle" style="font-size: 10pt;">หน่วย</th>
-                      <th rowspan="2" class="border-t border-l border-r border-b border-slate-700 py-1 px-1 font-bold text-center align-middle" style="font-size: 10pt;">จำนวน</th>
-                      <th rowspan="2" class="border-t border-l border-r border-b border-slate-700 py-1 px-1 font-bold text-center align-middle" style="font-size: 9.5pt; line-height: 1.2;">ราคา/หน่วย</th>
-                      <th rowspan="2" class="border-t border-l border-r border-b border-slate-700 py-1 px-1 font-bold text-center align-middle" style="font-size: 10pt;">จำนวนเงิน</th>
-                    </tr>
-                    <tr class="border-b border-slate-700 text-center font-bold" style="height: 22px;">
-                      <th class="border-l border-r border-b border-slate-700 pt-0 pb-2 px-1 text-center font-bold tracking-wider align-middle" style="font-size: 8pt; line-height: 1.2;">ITEM</th>
-                      <th class="border-l border-r border-b border-slate-700 pt-0 pb-2 px-2 text-center font-bold tracking-wider align-middle" style="font-size: 8pt; line-height: 1.2;">DESCRIPTION</th>
+                    <tr class="border-t border-b border-slate-700 font-bold text-center bg-white" style="height: 44px;">
+                      <th class="border-t border-l border-r border-b border-slate-700 py-1 px-1 font-bold text-center align-middle">
+                        <div class="text-[9.5pt] leading-tight">ลำดับที่</div>
+                        <div class="text-[7.5pt] font-semibold tracking-wider text-slate-600 leading-tight mt-0.5">ITEM</div>
+                      </th>
+                      <th class="border-t border-l border-r border-b border-slate-700 py-1 px-2 font-bold text-center align-middle">
+                        <div class="text-[10pt] leading-tight">รายการ</div>
+                        <div class="text-[7.5pt] font-semibold tracking-wider text-slate-600 leading-tight mt-0.5">DESCRIPTION</div>
+                      </th>
+                      <th class="border-t border-l border-r border-b border-slate-700 py-1 px-1 font-bold text-center align-middle text-[10pt]">
+                        <div>หน่วย</div>
+                      </th>
+                      <th class="border-t border-l border-r border-b border-slate-700 py-1 px-1 font-bold text-center align-middle text-[10pt]">
+                        <div>จำนวน</div>
+                      </th>
+                      <th class="border-t border-l border-r border-b border-slate-700 py-1 px-1 font-bold text-center align-middle text-[9.5pt]">
+                        <div>ราคา/หน่วย</div>
+                      </th>
+                      <th class="border-t border-l border-r border-b border-slate-700 py-1 px-1 font-bold text-center align-middle text-[10pt]">
+                        <div>จำนวนเงิน</div>
+                      </th>
                     </tr>
                   </thead>
 
@@ -1129,11 +1139,11 @@
                     <template x-for="(item, idx) in quotation.items" :key="'preview_' + (item.id || idx)">
                       <tr style="height: 28px;">
                         <!-- Col A: ITEM NO -->
-                        <td class="border-l border-r border-slate-700 text-center px-1 whitespace-nowrap align-middle" x-text="item.type === 'item' ? item.itemNo : ''"></td>
+                        <td class="border-l border-r border-slate-700 text-center px-1 py-1 whitespace-nowrap align-middle" x-text="item.type === 'item' ? item.itemNo : ''"></td>
 
                         <!-- Col B: DESCRIPTION -->
                         <td
-                          class="border-l border-r border-slate-700 px-2.5 break-words align-middle"
+                          class="border-l border-r border-slate-700 px-2.5 py-1 break-words align-middle"
                           :class="{
                             'font-bold text-slate-900': item.type === 'item' && item.itemNo === '1',
                             'pl-6 text-slate-800': item.type === 'bullet',
@@ -1143,28 +1153,28 @@
                         ></td>
 
                         <!-- Col C: UNIT -->
-                        <td class="border-l border-r border-slate-700 text-center px-1 whitespace-nowrap align-middle" x-text="item.type === 'item' ? (item.unit || '') : ''"></td>
+                        <td class="border-l border-r border-slate-700 text-center px-1 py-1 whitespace-nowrap align-middle" x-text="item.type === 'item' ? (item.unit || '') : ''"></td>
 
                         <!-- Col D: QTY -->
-                        <td class="border-l border-r border-slate-700 text-center px-1 whitespace-nowrap align-middle" x-text="item.type === 'item' ? (item.qty !== undefined && item.qty !== '' ? item.qty : '') : ''"></td>
+                        <td class="border-l border-r border-slate-700 text-center px-1 py-1 whitespace-nowrap align-middle" x-text="item.type === 'item' ? (item.qty !== undefined && item.qty !== '' ? item.qty : '') : ''"></td>
 
                         <!-- Col E: UNIT PRICE -->
-                        <td class="border-l border-r border-slate-700 text-right pr-2.5 pl-1 whitespace-nowrap align-middle" style="font-variant-numeric: tabular-nums;" x-text="item.type === 'item' && item.unitPrice !== undefined && item.unitPrice !== '' ? formatCurrency(item.unitPrice) : ''"></td>
+                        <td class="border-l border-r border-slate-700 text-right pr-2.5 pl-1 py-1 whitespace-nowrap align-middle" style="font-variant-numeric: tabular-nums;" x-text="item.type === 'item' && item.unitPrice !== undefined && item.unitPrice !== '' ? formatCurrency(item.unitPrice) : ''"></td>
 
                         <!-- Col F: AMOUNT -->
-                        <td class="border-l border-r border-slate-700 text-right pr-2.5 pl-1 whitespace-nowrap align-middle" style="font-variant-numeric: tabular-nums;" x-text="item.type === 'item' && item.amount !== undefined && item.amount !== '' ? formatCurrency(item.amount) : ''"></td>
+                        <td class="border-l border-r border-slate-700 text-right pr-2.5 pl-1 py-1 whitespace-nowrap align-middle" style="font-variant-numeric: tabular-nums;" x-text="item.type === 'item' && item.amount !== undefined && item.amount !== '' ? formatCurrency(item.amount) : ''"></td>
                       </tr>
                     </template>
 
                     <!-- Fill remaining empty rows up to 17 rows to match original Excel layout -->
                     <template x-for="i in Math.max(0, 17 - quotation.items.length)" :key="'empty_' + i">
                       <tr style="height: 28px;">
-                        <td class="border-l border-r border-slate-700 align-middle">&nbsp;</td>
-                        <td class="border-l border-r border-slate-700 align-middle">&nbsp;</td>
-                        <td class="border-l border-r border-slate-700 align-middle">&nbsp;</td>
-                        <td class="border-l border-r border-slate-700 align-middle">&nbsp;</td>
-                        <td class="border-l border-r border-slate-700 align-middle">&nbsp;</td>
-                        <td class="border-l border-r border-slate-700 align-middle">&nbsp;</td>
+                        <td class="border-l border-r border-slate-700 py-1 align-middle">&nbsp;</td>
+                        <td class="border-l border-r border-slate-700 py-1 align-middle">&nbsp;</td>
+                        <td class="border-l border-r border-slate-700 py-1 align-middle">&nbsp;</td>
+                        <td class="border-l border-r border-slate-700 py-1 align-middle">&nbsp;</td>
+                        <td class="border-l border-r border-slate-700 py-1 align-middle">&nbsp;</td>
+                        <td class="border-l border-r border-slate-700 py-1 align-middle">&nbsp;</td>
                       </tr>
                     </template>
                   </tbody>
@@ -1190,28 +1200,26 @@
                     </tr>
 
                     <!-- Row 31 to 34: Signature Frame Section (Exact 3-tier inline symmetry) -->
-                    <tr style="height: 108px;" class="border-b border-slate-700 align-top">
+                    <tr style="height: 104px;" class="border-b border-slate-700 align-top">
                       <!-- Box 1 (Cols A-C): Approver (Customer) -->
                       <td colspan="3" class="border-l border-r border-slate-700 px-3.5 py-3 align-top">
                         <div class="flex flex-col justify-between h-full">
                           <!-- Tier 1: Approver label + signing dotted line inline -->
-                          <div class="flex items-center text-slate-900 font-bold text-[9.5pt] pt-0.5">
-                            <span class="w-[54px] shrink-0 font-bold">ผู้อนุมัติ</span>
-                            <span class="shrink-0 mr-2 font-bold">:</span>
-                            <span class="border-b border-dotted border-slate-500 grow mb-0.5"></span>
+                          <div class="flex items-center text-slate-900 font-bold text-[9.5pt]">
+                            <span class="w-[66px] shrink-0 font-bold">ผู้อนุมัติ :</span>
+                            <span class="border-b-2 border-dotted border-slate-400 grow mb-0.5"></span>
                           </div>
 
                           <!-- Tier 2: Parentheses centered for printed name directly under signing line -->
                           <div class="flex items-center text-[9pt]">
                             <span class="w-[66px] shrink-0"></span>
-                            <span class="grow text-center text-slate-600 font-normal tracking-wider">(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)</span>
+                            <span class="grow text-center text-slate-500 font-normal tracking-widest">(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)</span>
                           </div>
 
                           <!-- Tier 3: Approver Position Line -->
                           <div class="flex items-center text-slate-900 font-bold text-[9.5pt]">
-                            <span class="w-[54px] shrink-0 font-bold">ตำแหน่ง</span>
-                            <span class="shrink-0 mr-2 font-bold">:</span>
-                            <span class="border-b border-dotted border-slate-500 grow mb-0.5"></span>
+                            <span class="w-[66px] shrink-0 font-bold">ตำแหน่ง :</span>
+                            <span class="border-b-2 border-dotted border-slate-400 grow mb-0.5"></span>
                           </div>
                         </div>
                       </td>
@@ -1219,25 +1227,22 @@
                       <!-- Box 2 (Cols D-F): Proposer (Seller) -->
                       <td colspan="3" class="border-r border-slate-700 px-3.5 py-3 align-top">
                         <div class="flex flex-col justify-between h-full">
-                          <!-- Tier 1: Proposer label + seller name inline with underline (never wraps/drops) -->
-                          <div class="flex items-center text-slate-900 font-bold text-[9.5pt] pt-0.5">
-                            <span class="w-[42px] shrink-0 font-bold">ผู้เสนอ</span>
-                            <span class="shrink-0 mr-1.5 font-bold">:</span>
-                            <span class="border-b border-slate-600 font-bold text-slate-900 text-center pb-0.5 whitespace-nowrap grow tracking-tight mr-1"
-                                  :class="(quotation.seller?.name || '').length > 25 ? 'text-[6.5pt]' : (quotation.seller?.name || '').length > 18 ? 'text-[7.5pt]' : 'text-[8.5pt]'"
-                                  x-text="quotation.seller?.name || ''"></span>
+                          <!-- Tier 1: Proposer label + signing dotted line inline -->
+                          <div class="flex items-center text-slate-900 font-bold text-[9.5pt]">
+                            <span class="w-[58px] shrink-0 font-bold">ผู้เสนอ :</span>
+                            <span class="border-b-2 border-dotted border-slate-400 grow mb-0.5"></span>
                           </div>
 
-                          <!-- Tier 2: Invisible spacer matching Tier 2 height for perfect row alignment -->
-                          <div class="flex items-center text-[9pt] invisible" aria-hidden="true">
-                            <span class="w-[50px] shrink-0"></span>
-                            <span class="grow text-center">&nbsp;</span>
+                          <!-- Tier 2: Seller printed name in parentheses centered directly under signing line -->
+                          <div class="flex items-center text-[9pt]">
+                            <span class="w-[58px] shrink-0"></span>
+                            <span class="grow text-center text-slate-800 font-medium tracking-tight" x-text="'( ' + (quotation.seller?.name || '') + ' )'"></span>
                           </div>
 
                           <!-- Tier 3: Document Date centered under proposer signature -->
                           <div class="flex items-center text-[9pt]">
-                            <span class="w-[50px] shrink-0"></span>
-                            <span class="grow text-center text-slate-700 whitespace-nowrap mr-1" x-text="formatDateLong(quotation.docDate)"></span>
+                            <span class="w-[58px] shrink-0 font-bold text-slate-900 text-[9.5pt]">วันที่ :</span>
+                            <span class="grow text-center text-slate-700" x-text="formatDateLong(quotation.docDate)"></span>
                           </div>
                         </div>
                       </td>
