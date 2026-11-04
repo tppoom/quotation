@@ -86,7 +86,7 @@
         fitToHeight: 1,
         scale: 90,
         horizontalCentered: true,
-        printArea: 'A1:F34',
+        printArea: 'A1:F33',
         margins: {
           left: 0.3,
           right: 0.16,
@@ -108,27 +108,27 @@
       { key: 'F', width: 10.25 }
     ];
 
-    // Row heights matching reference template
+    // Row heights matching reference template (Row 3 spacer deleted, all shifted by -1)
     ws.getRow(1).height = 30.75;
     ws.getRow(2).height = 23.25;
-    ws.getRow(3).height = 4.5;
-    ws.getRow(4).height = 25.5;
-    ws.getRow(5).height = 21.75;
-    ws.getRow(6).height = 26.25;
-    ws.getRow(10).height = 24;
-    ws.getRow(11).height = 18.75;
-    ws.getRow(12).height = 24;
-    ws.getRow(17).height = 25.5;
-    ws.getRow(19).height = 21.75;
+    ws.getRow(3).height = 25.5;
+    ws.getRow(4).height = 21.75;
+    ws.getRow(5).height = 26.25;
+    ws.getRow(9).height = 24;
+    ws.getRow(10).height = 18.75;
+    ws.getRow(11).height = 24;
+    ws.getRow(16).height = 25.5;
+    ws.getRow(18).height = 21.75;
+    ws.getRow(20).height = 21.75;
     ws.getRow(21).height = 21.75;
     ws.getRow(22).height = 21.75;
     ws.getRow(23).height = 21.75;
-    ws.getRow(24).height = 21.75;
-    ws.getRow(29).height = 21.95;
-    ws.getRow(30).height = 20.25;
-    ws.getRow(31).height = 11.25;
-    ws.getRow(33).height = 21.95;
-    ws.getRow(34).height = 24;
+    ws.getRow(28).height = 21.95;
+    ws.getRow(29).height = 20.25;
+    ws.getRow(30).height = 11.25;
+    ws.getRow(31).height = 24;
+    ws.getRow(32).height = 21.95;
+    ws.getRow(33).height = 24;
 
     const fontHeader1 = { name: 'Sarabun', size: 16, bold: true };
     const fontHeader2 = { name: 'Sarabun', size: 12, bold: true };
@@ -151,99 +151,98 @@
     ws.getCell('A2').font = fontHeader2;
     ws.getCell('A2').alignment = { horizontal: 'center', vertical: 'middle' };
 
-    // Row 4: Attention & No
-    ws.mergeCells('A4:C4');
-    ws.getCell('A4').value = `เรียน/Attention : ${data.customer?.name || ''}`;
-    ws.getCell('A4').font = fontBold;
-    ws.getCell('A4').alignment = { horizontal: 'left', vertical: 'middle', shrinkToFit: true };
+    // Row 3: Attention & No (Row 3 spacer deleted)
+    ws.mergeCells('A3:C3');
+    ws.getCell('A3').value = `เรียน/Attention : ${data.customer?.name || ''}`;
+    ws.getCell('A3').font = fontBold;
+    ws.getCell('A3').alignment = { horizontal: 'left', vertical: 'middle', shrinkToFit: true };
+
+    ws.mergeCells('D3:E3');
+    ws.getCell('D3').value = 'เลขที่/ No.';
+    ws.getCell('D3').font = fontRegular;
+    ws.getCell('D3').alignment = { horizontal: 'left', vertical: 'middle' };
+    ws.getCell('F3').value = data.docNo || '';
+    ws.getCell('F3').font = { name: 'Angsana New', size: 10, bold: true };
+    ws.getCell('F3').alignment = { horizontal: 'right', vertical: 'middle', shrinkToFit: true };
+
+    // Row 4: Customer Address & Date
+    ws.getCell('A4').value = 'ที่อยู่  :';
+    ws.getCell('A4').font = fontRegular;
+    ws.getCell('A4').alignment = { horizontal: 'left', vertical: 'middle' };
+    ws.mergeCells('B4:C4');
+    ws.getCell('B4').value = data.customer?.address || '';
+    ws.getCell('B4').font = fontRegular;
+    ws.getCell('B4').alignment = { horizontal: 'left', vertical: 'middle', shrinkToFit: true };
 
     ws.mergeCells('D4:E4');
-    ws.getCell('D4').value = 'เลขที่/ No.';
+    ws.getCell('D4').value = 'วันที่ Date ';
     ws.getCell('D4').font = fontRegular;
     ws.getCell('D4').alignment = { horizontal: 'left', vertical: 'middle' };
-    ws.getCell('F4').value = data.docNo || '';
-    ws.getCell('F4').font = { name: 'Angsana New', size: 10, bold: true };
-    ws.getCell('F4').alignment = { horizontal: 'right', vertical: 'middle', shrinkToFit: true };
+    ws.getCell('F4').value = formatThaiDateShort(data.docDate);
+    ws.getCell('F4').font = fontRegular;
+    ws.getCell('F4').alignment = { horizontal: 'center', vertical: 'middle' };
 
-    // Row 5: Customer Address & Date
-    ws.getCell('A5').value = 'ที่อยู่  :';
-    ws.getCell('A5').font = fontRegular;
-    ws.getCell('A5').alignment = { horizontal: 'left', vertical: 'middle' };
-    ws.mergeCells('B5:C5');
-    ws.getCell('B5').value = data.customer?.address || '';
-    ws.getCell('B5').font = fontRegular;
-    ws.getCell('B5').alignment = { horizontal: 'left', vertical: 'middle', shrinkToFit: true };
+    // Row 5: Job Title
+    ws.mergeCells('D5:F5');
+    ws.getCell('D5').value = data.jobTitle || '';
+    ws.getCell('D5').font = { name: 'Sarabun', size: 10.5, bold: true };
+    ws.getCell('D5').alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
 
-    ws.mergeCells('D5:E5');
-    ws.getCell('D5').value = 'วันที่ Date ';
-    ws.getCell('D5').font = fontRegular;
-    ws.getCell('D5').alignment = { horizontal: 'left', vertical: 'middle' };
-    ws.getCell('F5').value = formatThaiDateShort(data.docDate);
-    ws.getCell('F5').font = fontRegular;
-    ws.getCell('F5').alignment = { horizontal: 'center', vertical: 'middle' };
+    // Row 6: Seller Name
+    ws.mergeCells('A6:C6');
+    ws.getCell('A6').value = `ชื่อ : ${data.seller?.name || ''}`;
+    ws.getCell('A6').font = fontRegular;
+    ws.getCell('A6').alignment = { horizontal: 'left', vertical: 'middle', shrinkToFit: true };
 
-    // Row 6: Job Title
-    ws.mergeCells('D6:F6');
-    ws.getCell('D6').value = data.jobTitle || '';
-    ws.getCell('D6').font = { name: 'Sarabun', size: 10.5, bold: true };
-    ws.getCell('D6').alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
-
-    // Row 7: Seller Name
+    // Row 7: Seller Address & Phone
     ws.mergeCells('A7:C7');
-    ws.getCell('A7').value = `ชื่อ : ${data.seller?.name || ''}`;
+    ws.getCell('A7').value = `ที่อยู่ : ${data.seller?.address || ''}`;
     ws.getCell('A7').font = fontRegular;
     ws.getCell('A7').alignment = { horizontal: 'left', vertical: 'middle', shrinkToFit: true };
 
-    // Row 8: Seller Address & Phone
-    ws.mergeCells('A8:C8');
-    ws.getCell('A8').value = `ที่อยู่ : ${data.seller?.address || ''}`;
-    ws.getCell('A8').font = fontRegular;
-    ws.getCell('A8').alignment = { horizontal: 'left', vertical: 'middle', shrinkToFit: true };
+    ws.mergeCells('D7:E7');
+    ws.getCell('D7').value = data.seller?.tel1 ? `TEL. ${data.seller.tel1}` : '';
+    ws.getCell('D7').font = fontRegular;
+    ws.getCell('D7').alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
+    ws.getCell('F7').value = data.seller?.tel2 || '';
+    ws.getCell('F7').font = fontRegular;
+    ws.getCell('F7').alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
 
-    ws.mergeCells('D8:E8');
-    ws.getCell('D8').value = data.seller?.tel1 ? `TEL. ${data.seller.tel1}` : '';
+    // Row 8: Bank Account
+    ws.mergeCells('D8:F8');
+    ws.getCell('D8').value = data.seller?.bank || '';
     ws.getCell('D8').font = fontRegular;
     ws.getCell('D8').alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
-    ws.getCell('F8').value = data.seller?.tel2 || '';
-    ws.getCell('F8').font = fontRegular;
-    ws.getCell('F8').alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
 
-    // Row 9: Bank Account
-    ws.mergeCells('D9:F9');
-    ws.getCell('D9').value = data.seller?.bank || '';
-    ws.getCell('D9').font = fontRegular;
-    ws.getCell('D9').alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
+    // Table Header: Row 9 & 10
+    ws.getCell('A9').value = 'ลำดับที่';
+    ws.getCell('A10').value = 'ITEM';
+    ws.getCell('B9').value = 'รายการ';
+    ws.getCell('B10').value = 'DESCRIPTION';
 
-    // Table Header: Row 10 & 11
-    ws.getCell('A10').value = 'ลำดับที่';
-    ws.getCell('A11').value = 'ITEM';
-    ws.getCell('B10').value = 'รายการ';
-    ws.getCell('B11').value = 'DESCRIPTION';
+    ws.getCell('C9').value = 'หน่วย';
+    ws.getCell('D9').value = 'จำนวน';
+    ws.getCell('E9').value = 'ราคา/หน่วย';
+    ws.getCell('F9').value = 'จำนวนเงิน';
 
-    ws.getCell('C10').value = 'หน่วย';
-    ws.getCell('D10').value = 'จำนวน';
-    ws.getCell('E10').value = 'ราคา/หน่วย';
-    ws.getCell('F10').value = 'จำนวนเงิน';
-
-    const thCells = ['A10', 'B10', 'C10', 'D10', 'E10', 'F10', 'A11', 'B11'];
+    const thCells = ['A9', 'B9', 'C9', 'D9', 'E9', 'F9', 'A10', 'B10'];
     thCells.forEach(ref => {
       const c = ws.getCell(ref);
       c.font = fontTh;
       c.alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
     });
-    ws.getCell('E10').alignment = { horizontal: 'center', vertical: 'middle', wrapText: true, shrinkToFit: true };
+    ws.getCell('E9').alignment = { horizontal: 'center', vertical: 'middle', wrapText: true, shrinkToFit: true };
 
-    // Merge C10:C11, D10:D11, E10:E11, F10:F11 with independent top and bottom borders
-    // Using mergeCellsWithoutStyle guarantees the top border is not overwritten by the bottom cell
+    // Merge C9:C10, D9:D10, E9:E10, F9:F10 with independent top and bottom borders
     ['C', 'D', 'E', 'F'].forEach(col => {
-      ws.getCell(`${col}10`).border = { top: thin, left: thin, right: thin };
-      ws.getCell(`${col}10`).alignment = { horizontal: 'center', vertical: 'middle' };
-      ws.getCell(`${col}11`).border = { bottom: thin, left: thin, right: thin };
-      ws.mergeCellsWithoutStyle(`${col}10:${col}11`);
+      ws.getCell(`${col}9`).border = { top: thin, left: thin, right: thin };
+      ws.getCell(`${col}9`).alignment = { horizontal: 'center', vertical: 'middle' };
+      ws.getCell(`${col}10`).border = { bottom: thin, left: thin, right: thin };
+      ws.mergeCellsWithoutStyle(`${col}9:${col}10`);
     });
 
-    // Populate Items: Rows 12 to endRow (at least 17 data rows to match A4 single page standard)
-    const startRow = 12;
+    // Populate Items: Rows 11 to endRow (at least 17 data rows to match A4 single page standard)
+    const startRow = 11;
     const items = data.items || [];
     const dataRowCount = Math.max(17, items.length);
     const endRow = startRow + dataRowCount - 1;
@@ -321,13 +320,14 @@
     ws.getCell(`A${sigHeaderRow}`).alignment = { horizontal: 'left', vertical: 'middle' };
 
     ws.getCell(`D${sigHeaderRow}`).value = '   ผู้เสนอ :';
-    ws.getCell(`D${sigHeaderRow}`).font = { name: 'Angsana New', size: 9, bold: true };
+    ws.getCell(`D${sigHeaderRow}`).font = { name: 'Angsana New', size: 12, bold: true };
     ws.getCell(`D${sigHeaderRow}`).alignment = { horizontal: 'left', vertical: 'middle', shrinkToFit: true };
 
     ws.mergeCells(`E${sigHeaderRow}:F${sigHeaderRow}`);
     ws.getCell(`E${sigHeaderRow}`).value = data.seller?.name || '';
-    ws.getCell(`E${sigHeaderRow}`).font = { name: 'Angsana New', size: 10, bold: true };
-    ws.getCell(`E${sigHeaderRow}`).alignment = { horizontal: 'left', vertical: 'middle', indent: 2, shrinkToFit: true };
+    const sellerNameLen = (data.seller?.name || '').length;
+    ws.getCell(`E${sigHeaderRow}`).font = { name: 'Angsana New', size: sellerNameLen > 25 ? 10 : sellerNameLen > 18 ? 11 : 13, bold: true };
+    ws.getCell(`E${sigHeaderRow}`).alignment = { horizontal: 'center', vertical: 'middle', shrinkToFit: true };
 
     ws.getCell(`A${sigPosRow}`).value = 'ตำแหน่ง ';
     ws.getCell(`A${sigPosRow}`).font = { name: 'Angsana New', size: 14, bold: true };
@@ -345,68 +345,68 @@
     // =================================================================
     // 100% COMPLETE TABLE & FRAME BORDER RULES (Rows 3 to sigParenRow)
     // =================================================================
-    // 1. Row 3 bottom border divider
+    // 1. Top border divider under QUOTATION (Row 3 top)
     ['A', 'B', 'C', 'D', 'E', 'F'].forEach(c => {
-      ws.getCell(`${c}3`).border = { bottom: thin };
+      ws.getCell(`${c}3`).border = { top: thin };
     });
-    ws.getCell('A3').border = { bottom: thin, left: thin };
-    ws.getCell('F3').border = { bottom: thin, right: thin };
+    ws.getCell('A3').border = { top: thin, left: thin };
+    ws.getCell('F3').border = { top: thin, right: thin };
 
-    // 2. Customer Box A4:C6
+    // 2. Customer Box A3:C5
     ['A', 'B', 'C'].forEach(c => {
-      ws.getCell(`${c}4`).border = Object.assign({}, ws.getCell(`${c}4`).border, { top: thin });
-      ws.getCell(`${c}6`).border = Object.assign({}, ws.getCell(`${c}6`).border, { bottom: thin });
+      ws.getCell(`${c}3`).border = Object.assign({}, ws.getCell(`${c}3`).border, { top: thin });
+      ws.getCell(`${c}5`).border = Object.assign({}, ws.getCell(`${c}5`).border, { bottom: thin });
     });
-    [4, 5, 6].forEach(r => {
+    [3, 4, 5].forEach(r => {
       ws.getCell(`A${r}`).border = Object.assign({}, ws.getCell(`A${r}`).border, { left: thin });
       ws.getCell(`C${r}`).border = Object.assign({}, ws.getCell(`C${r}`).border, { right: thin });
     });
 
-    // 3. Doc Info Boxes D4:F6
-    [['D4', 'E4', 'F4'], ['D5', 'E5', 'F5']].forEach(row => {
+    // 3. Doc Info Boxes D3:F5
+    [['D3', 'E3', 'F3'], ['D4', 'E4', 'F4']].forEach(row => {
       row.forEach(addr => {
         ws.getCell(addr).border = { top: thin, bottom: thin, left: thin, right: thin };
       });
     });
-    // D6:F6 is merged Job Title Box
-    ['D6', 'E6', 'F6'].forEach(addr => {
+    // D5:F5 is merged Job Title Box
+    ['D5', 'E5', 'F5'].forEach(addr => {
       ws.getCell(addr).border = { top: thin, bottom: thin, left: thin, right: thin };
     });
 
-    // 4. Seller Box A7:C9
+    // 4. Seller Box A6:C8
     ['A', 'B', 'C'].forEach(c => {
-      ws.getCell(`${c}7`).border = Object.assign({}, ws.getCell(`${c}7`).border, { top: thin });
-      ws.getCell(`${c}9`).border = Object.assign({}, ws.getCell(`${c}9`).border, { bottom: thin });
+      ws.getCell(`${c}6`).border = Object.assign({}, ws.getCell(`${c}6`).border, { top: thin });
+      ws.getCell(`${c}8`).border = Object.assign({}, ws.getCell(`${c}8`).border, { bottom: thin });
     });
-    [7, 8, 9].forEach(r => {
+    [6, 7, 8].forEach(r => {
       ws.getCell(`A${r}`).border = Object.assign({}, ws.getCell(`A${r}`).border, { left: thin });
       ws.getCell(`C${r}`).border = Object.assign({}, ws.getCell(`C${r}`).border, { right: thin });
     });
 
-    // 5. Seller Tel/Bank Boxes
+    // 5. Seller Tel/Bank Boxes (D6:F8)
+    ws.getCell('D6').border = { top: thin, left: thin };
+    ws.getCell('E6').border = { top: thin };
+    ws.getCell('F6').border = { top: thin, bottom: thin, left: thin, right: thin };
+
     ws.getCell('D7').border = { top: thin, left: thin };
     ws.getCell('E7').border = { top: thin };
     ws.getCell('F7').border = { top: thin, bottom: thin, left: thin, right: thin };
 
-    ws.getCell('D8').border = { top: thin, left: thin };
-    ws.getCell('E8').border = { top: thin };
-    ws.getCell('F8').border = { top: thin, bottom: thin, left: thin, right: thin };
+    // D8:F8 is merged Bank Account Box with continuous bottom border
+    ws.getCell('D8').border = { top: thin, bottom: thin, left: thin };
+    ws.getCell('E8').border = { top: thin, bottom: thin };
+    ws.getCell('F8').border = { top: thin, bottom: thin, right: thin };
 
-    // D9:F9 is merged Bank Account Box with continuous bottom border
-    ws.getCell('D9').border = { top: thin, bottom: thin, left: thin };
-    ws.getCell('E9').border = { top: thin, bottom: thin };
-    ws.getCell('F9').border = { top: thin, bottom: thin, right: thin };
+    // 6. Table Header Rows 9 & 10
+    ws.getCell('A9').border = { top: thin, left: thin, right: thin };
+    ws.getCell('B9').border = { top: thin, left: thin };
+    ws.getCell('A10').border = { bottom: thin, left: thin, right: thin };
+    ws.getCell('B10').border = { bottom: thin, left: thin };
 
-    // 6. Table Header Rows 10 & 11
-    ws.getCell('A10').border = { top: thin, left: thin, right: thin };
-    ws.getCell('B10').border = { top: thin, left: thin };
-    ws.getCell('A11').border = { bottom: thin, left: thin, right: thin };
-    ws.getCell('B11').border = { bottom: thin, left: thin };
-
-    // Header merged columns C, D, E, F: Set top on row 10, bottom on row 11
+    // Header merged columns C, D, E, F: Set top on row 9, bottom on row 10
     ['C', 'D', 'E', 'F'].forEach(col => {
-      ws.getCell(`${col}10`).border = { top: thin, left: thin, right: thin };
-      ws.getCell(`${col}11`).border = { bottom: thin, left: thin, right: thin };
+      ws.getCell(`${col}9`).border = { top: thin, left: thin, right: thin };
+      ws.getCell(`${col}10`).border = { bottom: thin, left: thin, right: thin };
     });
 
     // 7. Data Rows 12 to endRow

@@ -212,18 +212,18 @@ async function runE2ETests() {
   const expectedRowHeights = {
     1: 30.75,
     2: 23.25,
-    3: 4.5,
-    4: 25.5,
-    5: 21.75,
-    6: 26.25,
-    10: 24,
-    11: 18.75,
-    12: 24,
-    29: 21.95,
-    30: 20.25,
-    31: 11.25,
-    33: 21.95,
-    34: 24
+    3: 25.5,
+    4: 21.75,
+    5: 26.25,
+    9: 24,
+    10: 18.75,
+    11: 24,
+    28: 21.95,
+    29: 20.25,
+    30: 11.25,
+    31: 24,
+    32: 21.95,
+    33: 24
   };
   Object.entries(expectedRowHeights).forEach(([rowNum, expectedHeight]) => {
     const actualHeight = genWs.getRow(parseInt(rowNum, 10)).height;
@@ -234,30 +234,30 @@ async function runE2ETests() {
   // 6.3 Compare Header Texts and Labels
   assert.strictEqual(genWs.getCell('A1').value, '   ใบเสนอราคา', 'Row 1 title must match');
   assert.strictEqual(genWs.getCell('A2').value, '   QUOTATION', 'Row 2 subtitle must match');
-  assert.strictEqual(genWs.getCell('D4').value, 'เลขที่/ No.');
-  assert.strictEqual(genWs.getCell('A5').value, 'ที่อยู่  :');
-  assert.strictEqual(genWs.getCell('D5').value, 'วันที่ Date ');
-  assert.strictEqual(genWs.getCell('A10').value, 'ลำดับที่');
-  assert.strictEqual(genWs.getCell('A11').value, 'ITEM');
-  assert.strictEqual(genWs.getCell('B10').value, 'รายการ');
-  assert.strictEqual(genWs.getCell('B11').value, 'DESCRIPTION');
-  assert.strictEqual(genWs.getCell('C10').value, 'หน่วย');
-  assert.strictEqual(genWs.getCell('D10').value, 'จำนวน');
-  assert.strictEqual(genWs.getCell('E10').value, 'ราคา/หน่วย');
-  assert.strictEqual(genWs.getCell('F10').value, 'จำนวนเงิน');
-  assert.strictEqual(genWs.getCell('D29').value, 'รวมเงิน');
-  assert.strictEqual(genWs.getCell('A32').value, 'ผู้อนุมัติ :');
-  assert.strictEqual(genWs.getCell('D32').value, '   ผู้เสนอ :');
-  assert.strictEqual(genWs.getCell('A33').value, 'ตำแหน่ง ');
-  assert.strictEqual(genWs.getCell('B34').value, '   (                                                                                )');
+  assert.strictEqual(genWs.getCell('D3').value, 'เลขที่/ No.');
+  assert.strictEqual(genWs.getCell('A4').value, 'ที่อยู่  :');
+  assert.strictEqual(genWs.getCell('D4').value, 'วันที่ Date ');
+  assert.strictEqual(genWs.getCell('A9').value, 'ลำดับที่');
+  assert.strictEqual(genWs.getCell('A10').value, 'ITEM');
+  assert.strictEqual(genWs.getCell('B9').value, 'รายการ');
+  assert.strictEqual(genWs.getCell('B10').value, 'DESCRIPTION');
+  assert.strictEqual(genWs.getCell('C9').value, 'หน่วย');
+  assert.strictEqual(genWs.getCell('D9').value, 'จำนวน');
+  assert.strictEqual(genWs.getCell('E9').value, 'ราคา/หน่วย');
+  assert.strictEqual(genWs.getCell('F9').value, 'จำนวนเงิน');
+  assert.strictEqual(genWs.getCell('D28').value, 'รวมเงิน');
+  assert.strictEqual(genWs.getCell('A31').value, 'ผู้อนุมัติ :');
+  assert.strictEqual(genWs.getCell('D31').value, '   ผู้เสนอ :');
+  assert.strictEqual(genWs.getCell('A32').value, 'ตำแหน่ง ');
+  assert.strictEqual(genWs.getCell('B33').value, '   (                                                                                )');
   console.log('  ✓ Header texts and labels match template 100%.');
 
   // 6.4 Verify Merged Cell Ranges
   const genMerges = genWs.model.merges;
   const criticalMerges = [
-    'A1:F1', 'A2:F2', 'A4:C4', 'D4:E4', 'B5:C5', 'D5:E5', 'D6:F6',
-    'A7:C7', 'A8:C8', 'D8:E8', 'D9:F9', 'A29:C29', 'D29:E29', 'E32:F32', 'E33:F33',
-    'C10:C11', 'D10:D11', 'E10:E11', 'F10:F11'
+    'A1:F1', 'A2:F2', 'A3:C3', 'D3:E3', 'B4:C4', 'D4:E4', 'D5:F5',
+    'A6:C6', 'A7:C7', 'D7:E7', 'D8:F8', 'A28:C28', 'D28:E28', 'E31:F31', 'E32:F32',
+    'C9:C10', 'D9:D10', 'E9:E10', 'F9:F10'
   ];
   criticalMerges.forEach(mergeRange => {
     assert(genMerges.includes(mergeRange), `Merged range ${mergeRange} must be present in exported worksheet`);
@@ -265,12 +265,12 @@ async function runE2ETests() {
   console.log('  ✓ Merged cells match template layout.');
 
   // 6.5 Verify SUM Formula & Total Results
-  assert.deepStrictEqual(genWs.getCell('F29').value, {
-    formula: 'SUM(F12:F28)',
+  assert.deepStrictEqual(genWs.getCell('F28').value, {
+    formula: 'SUM(F11:F27)',
     result: 57552.90
-  }, 'Cell F29 must contain SUM(F12:F28) formula and match total');
-  assert.strictEqual(genWs.getCell('F29').numFmt, '#,##0.00', 'Cell F29 format must be #,##0.00');
-  assert.strictEqual(genWs.getCell('A29').value, '(ห้าหมื่นเจ็ดพันห้าร้อยห้าสิบสองบาทเก้าสิบสตางค์)');
+  }, 'Cell F28 must contain SUM(F11:F27) formula and match total');
+  assert.strictEqual(genWs.getCell('F28').numFmt, '#,##0.00', 'Cell F28 format must be #,##0.00');
+  assert.strictEqual(genWs.getCell('A28').value, '(ห้าหมื่นเจ็ดพันห้าร้อยห้าสิบสองบาทเก้าสิบสตางค์)');
   console.log('  ✓ SUM formula and total formatting verified.');
 
   // 6.6 Verify Export Filename Sanitization
